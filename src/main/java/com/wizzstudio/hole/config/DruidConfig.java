@@ -43,10 +43,9 @@ public class DruidConfig {
         System.out.println(userName+"  "+password);
         initParams.put("loginUsername",userName);
         initParams.put("loginPassword",password);
-        initParams.put("allow","127.0.0.1");//默认允许所有访问
+        //initParams.put("allow","127.0.0.1");//默认允许所有访问
         //initParams.put("deny","192.168.15.21");
 
-        bean.setInitParameters(initParams);
         return bean;
     }
 

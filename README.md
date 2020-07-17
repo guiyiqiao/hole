@@ -42,7 +42,8 @@ public class Comment {
 
     //是否为私信，默认false
     private Boolean state;
-
+    //发布时间
+    private Date releaseTime;
     //是否被举报
     private Boolean tipOff;
 
@@ -76,3 +77,14 @@ public class HoleResult {
     private Object data;
 }
 ```
+
+## 数据库修改处
+
+### 未处理修改：
+user表的openid唯一
+comment表添加的发布时间
+Comment类对应的发布时间属性的添加
+
+## 问题
+1.微信小程序头像url变化问题？
+交由前端保存，还是后端动态更新url，直接存图片应该是不可行

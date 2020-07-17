@@ -1,5 +1,7 @@
 package com.wizzstudio.hole.model;
 
+import java.util.Date;
+
 /**
  * @Author 桂乙侨
  * @Date 2020/7/17 11:26
@@ -22,8 +24,9 @@ public class Comment {
     //是否被举报
     private Boolean tipOff;
 
-    private Boolean valid;
+    private Date releaseTime;
 
+    private Boolean valid;
 
 
 
@@ -85,6 +88,14 @@ public class Comment {
         this.tipOff = tipOff;
     }
 
+    public Date getReleaseTime() {
+        return releaseTime;
+    }
+
+    public void setReleaseTime(Date releaseTime) {
+        this.releaseTime = releaseTime;
+    }
+
     public Boolean getValid() {
         return valid;
     }
@@ -103,6 +114,7 @@ public class Comment {
                 ", thank=" + thank +
                 ", state=" + state +
                 ", tipOff=" + tipOff +
+                ", releaseTime=" + releaseTime +
                 ", valid=" + valid +
                 '}';
     }
@@ -113,8 +125,11 @@ public class Comment {
         private Integer blogId;
         private String content;
         private Integer thank;
+        //是否为私信，默认false
         private Boolean state;
+        //是否被举报
         private Boolean tipOff;
+        private Date releaseTime;
         private Boolean valid;
 
         private CommentBuilder() {
@@ -159,6 +174,11 @@ public class Comment {
             return this;
         }
 
+        public CommentBuilder withReleaseTime(Date releaseTime) {
+            this.releaseTime = releaseTime;
+            return this;
+        }
+
         public CommentBuilder withValid(Boolean valid) {
             this.valid = valid;
             return this;
@@ -173,6 +193,7 @@ public class Comment {
             comment.setThank(thank);
             comment.setState(state);
             comment.setTipOff(tipOff);
+            comment.setReleaseTime(releaseTime);
             comment.setValid(valid);
             return comment;
         }

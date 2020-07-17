@@ -54,13 +54,13 @@ CREATE TABLE `comment`  (
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户主键自增',
-  `open_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '小程序用户唯一标识',
+  `open_id` varchar(128) NOT NULL COMMENT '小程序用户唯一标识',
   `address` int(11) NOT NULL COMMENT '树洞地址',
-  `nick_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '昵称',
-  `valid` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否有效，0无效，1有效',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
+  `nick_name` varchar(64) NOT NULL COMMENT '昵称',
+  `valid` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效，0无效，1有效',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `open_id` (`open_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 SET FOREIGN_KEY_CHECKS = 1;

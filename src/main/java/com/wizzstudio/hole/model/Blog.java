@@ -1,5 +1,6 @@
 package com.wizzstudio.hole.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:23
  * @Version 1.0
  */
-public class Blog {
+public class Blog implements Serializable {
 
     private Integer id;
 

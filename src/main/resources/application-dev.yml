@@ -7,3 +7,17 @@ spring:
     database: 6
     password: redispassword
     host: 47.105.184.154
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+wx:
+  appid: wx9a3cb780c9c0916c
+  secret: eef0b02a3eaa78bb72ade6150374a43c
+  grant_type: authorization_code
+hole:
+  jwt:
+    expire:
+      token: 300
+      refresh: 1800
+

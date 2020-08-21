@@ -25,15 +25,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("hole")
 public class HoleController {
 
-
-    /**
-     * 入住树洞有声
-     * @param code 微信小程序code
-     * @param nickName 昵称，默认为微信昵称
-     * @return
-     */
-    public HoleResult enroll(String code,String nickName){
-        return null;
-    }
-
 }

@@ -25,8 +25,8 @@ public class HoleResult {
         return new HoleResult(200,"操作成功",data);
     }
 
-    public static HoleResult failure(Object data){
-        return new HoleResult(600,"操作失败",data);
+    public static HoleResult failure(String message){
+        return new HoleResult(600,message);
     }
 
 
@@ -83,4 +83,40 @@ public class HoleResult {
                 '}';
     }
 
+
+    public static final class HoleResultBuilder {
+        private int code;
+        private String message;
+        private Object data;
+
+        public HoleResultBuilder() {
+        }
+
+        public static HoleResultBuilder HoleResult() {
+            return new HoleResultBuilder();
+        }
+
+        public HoleResultBuilder withCode(int code) {
+            this.code = code;
+            return this;
+        }
+
+        public HoleResultBuilder withMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        public HoleResultBuilder withData(Object data) {
+            this.data = data;
+            return this;
+        }
+
+        public HoleResult build() {
+            HoleResult holeResult = new HoleResult();
+            holeResult.setCode(code);
+            holeResult.setMessage(message);
+            holeResult.setData(data);
+            return holeResult;
+        }
+    }
 }

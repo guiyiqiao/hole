@@ -2,12 +2,14 @@ package com.wizzstudio.hole.model;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.io.Serializable;
+
 /**
  * @Author 桂乙侨
  * @Date 2020/7/17 11:21
  * @Version 1.0
  */
-public class User {
+public class User implements Serializable {
 
     private Integer id;
 

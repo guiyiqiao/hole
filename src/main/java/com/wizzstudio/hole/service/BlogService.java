@@ -1,6 +1,7 @@
 package com.wizzstudio.hole.service;
 
 import com.wizzstudio.hole.model.Blog;
+import com.wizzstudio.hole.util.HoleResult;
 import io.swagger.models.auth.In;
 
 import java.util.List;
@@ -12,7 +13,11 @@ import java.util.List;
  */
 public interface BlogService {
 
-    int insertBlog(Blog blog);
+    HoleResult addMatter(Blog blog);
+
+    HoleResult addHug(Integer blogId,Integer userId);
+
+    HoleResult report();
 
     List<Blog> listBlogByUserId(Integer userId);
 

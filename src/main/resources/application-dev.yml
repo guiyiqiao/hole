@@ -8,7 +8,7 @@ spring:
     password: redispassword
     host: 47.105.184.154
 mybatis:
-  mapper-locations: classpath:/mapper/*.xml
+  mapper-locations: classpath*:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 wx:

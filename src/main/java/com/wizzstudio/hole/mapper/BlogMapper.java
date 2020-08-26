@@ -7,9 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface BlogMapper {
-
-    int insertBlog(Blog blog);
+public interface BlogMapper extends tk.mybatis.mapper.common.Mapper<Blog> {
 
     List<Blog> listBlogByUserId(Integer userId);
 

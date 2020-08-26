@@ -9,7 +9,9 @@ package com.wizzstudio.hole.model.constant;
  */
 public enum TokenConstant {
 
-    USER_TOKEN("hole::user::token::"),USER_REFRESH_TOKEN("hole::user::refreshToken");
+    USER_TOKEN("hole::user::token::"),
+    USER_REFRESH_TOKEN("hole::user::refreshToken::");
+
 
     private String value;
 

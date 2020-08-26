@@ -2,20 +2,21 @@ package com.wizzstudio.hole.controller;
 
 import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.model.Blog;
+import com.wizzstudio.hole.model.vo.BlogVo;
 import com.wizzstudio.hole.service.BlogService;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.TokenUtil;
 import io.swagger.models.auth.In;
 import jdk.nashorn.internal.parser.Token;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,21 +35,45 @@ public class BlogController {
     private BlogService blogService;
     /**
      * 需求2.添加心事接口
-     * @param blog
+     * @param blogVo
      * @return
      */
     @UserLogin
     @PostMapping
-    public HoleResult addBlog(Blog blog, HttpServletRequest request){
-
+    public HoleResult addBlog(@Valid BlogVo blogVo, HttpServletRequest request){
+        Blog blog = new Blog();
+        BeanUtils.copyProperties(blog,blogVo);
         blog.setUserId(getUserId(request));
+        blog.setReleaseTime(new Date());
 
-        int ret = blogService.insertBlog(blog);
-        if(ret > 0)
-            return HoleResult.success();
-        else
-            return HoleResult.failure();
+        return blogService.addMatter(blog);
     }
+
+    /**
+     * 需求2.对心事添加hug
+     * 将userId存储于缓存中，以防止短期重复hug
+     * @param blogId
+     * @return
+     */
+
+    @PostMapping("hug/{blogId}")
+    @UserLogin
+    public HoleResult addHug(@PathVariable("blogId") Integer blogId,HttpServletRequest request){
+        return blogService.addHug(blogId,getUserId(request));
+    }
+
+    /**
+     * report 记为举报
+     * @param blogId
+     * @return
+     */
+    @PostMapping("report")
+    @UserLogin
+    public HoleResult report(@PathVariable("blogId") Integer blogId){
+        //未开发
+        return  null;
+    }
+
 
     /**
      * 需求4.查询我倾诉的心事

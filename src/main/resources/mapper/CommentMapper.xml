@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wizzstudio.hole.model.Comment">
-    <insert id="insertComment" parameterType="com.wizzstudio.hole.model.Comment">
-        INSERT INTO
-        comment(user_id,blog_id,content,thank,state,release_time,tip_off)
-        VALUES(#{userId},#{blogId},#{content},#{thank},#{state},#{release_time},#{tip_off})
-    </insert>
+<mapper namespace="com.wizzstudio.hole.mapper.CommentMapper">
+
 
 </mapper>

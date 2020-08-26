@@ -1,6 +1,7 @@
 package com.wizzstudio.hole.service;
 
 import com.wizzstudio.hole.model.Blog;
+import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.util.HoleResult;
 import io.swagger.models.auth.In;
 
@@ -17,7 +18,7 @@ public interface BlogService {
 
     HoleResult addHug(Integer blogId,Integer userId);
 
-    HoleResult report();
+    HoleResult report(BlogReport report);
 
     List<Blog> listBlogByUserId(Integer userId);
 

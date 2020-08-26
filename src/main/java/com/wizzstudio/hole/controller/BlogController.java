@@ -2,6 +2,7 @@ package com.wizzstudio.hole.controller;
 
 import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.model.Blog;
+import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.model.vo.BlogVo;
 import com.wizzstudio.hole.service.BlogService;
 import com.wizzstudio.hole.util.HoleResult;
@@ -63,15 +64,23 @@ public class BlogController {
     }
 
     /**
+     * 需求2.对心事的举报操作
      * report 记为举报
-     * @param blogId
+     * @param blogId  被举报的心事id
+     * @param content 举报类别/内容
      * @return
      */
-    @PostMapping("report")
+    @PostMapping("report/{blogId}")
     @UserLogin
-    public HoleResult report(@PathVariable("blogId") Integer blogId){
-        //未开发
-        return  null;
+    public HoleResult report(@PathVariable("blogId") Integer blogId,
+                             @RequestParam("content") String content,
+                             HttpServletRequest request){
+        BlogReport blogReport = BlogReport.BlogReportBuilder.aBlogReport()
+                .withUserId(getUserId(request))
+                .withBlogId(blogId)
+                .withContent(content)
+                .build();
+        return  blogService.report(blogReport);
     }
 
 

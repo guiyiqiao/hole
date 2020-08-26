@@ -18,6 +18,6 @@ wx:
 hole:
   jwt:
     expire:
-      token: 300
-      refresh: 1800
+      token: 3
+      refresh: 30
 

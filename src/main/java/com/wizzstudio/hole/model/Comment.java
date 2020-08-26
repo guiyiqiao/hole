@@ -8,7 +8,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:26
  * @Version 1.0
  */
-public class Comment implements Serializable {
+public class Comment implements Serializable ,DateComparable{
     private Integer id;
 
     private Integer userId;
@@ -118,6 +118,11 @@ public class Comment implements Serializable {
                 ", releaseTime=" + releaseTime +
                 ", valid=" + valid +
                 '}';
+    }
+
+    @Override
+    public Date getDate() {
+        return releaseTime;
     }
 
     public static final class CommentBuilder {

@@ -39,7 +39,8 @@ public class WxServiceImpl implements WxService {
 
     @Resource
     private RedisTemplate redisTemplate;
-    public ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
     /**
      * 微信小程序登陆授权方法
      * 若用户未注册，则先注册
@@ -62,31 +63,27 @@ public class WxServiceImpl implements WxService {
         //若未注册，则先注册
         String openid = response.getOpenid();
         User user = userMapper.queryUserByOpenId(openid);
-        //地址分配算法
+        //地址分配算法,随机分配树洞名称
         Integer addr = 50 + random.nextInt() % 50;
         if(user == null){
-             user = User.UserBuilder.anUser()
-                    .withOpenId(openid)
-                    .withNickName(StringUtils.isEmpty(nickName)?openid:nickName)
-                     .withAddress(addr)
-                    .build();
+            user = User.UserBuilder.anUser()
+                .withOpenId(openid)
+                .withNickName(StringUtils.isEmpty(nickName)?openid:nickName)
+                .withAddress(addr)
+                .build();
             int t = userMapper.insertUser(user);
             if(t <= 0)
-                return HoleResult.failure("添加用户失败！");
+                return HoleResult.failure("用户登陆认证失败，请重新登陆！");
             user = userMapper.queryUserByOpenId(openid);
         }
-        String token = (String) redisTemplate
-                .boundValueOps(TokenConstant.USER_REFRESH_TOKEN.toString()+user.getId()).get();
-        if(token == null) {
-            //将token存入redis，为需登录接口验证用
-            token = tokenUtil.sign(user.getId(),System.currentTimeMillis());
-            redisTemplate.boundValueOps(TokenConstant.USER_TOKEN.toString()+user.getId())
-                    .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.SECONDS);
-            redisTemplate.boundValueOps(TokenConstant.USER_REFRESH_TOKEN.toString()+user.getId())
-                    .set(token,tokenUtil.REFRESH_EXPIRE_TIME,TimeUnit.SECONDS);
-        }
-
+        //登陆认证成功，添加用户token
+        String token = tokenUtil.sign(user.getId(),System.currentTimeMillis());
+        redisTemplate.boundValueOps(TokenConstant.USER_TOKEN.toString()+user.getId())
+                .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.HOURS);
         //实现登陆逻辑，存token
+        String refreshToken = token;
+        redisTemplate.boundValueOps(TokenConstant.USER_REFRESH_TOKEN.toString()+user.getId())
+                .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.HOURS);
         httpResponse.setHeader("Authorization",token);
 
         return HoleResult.HoleResultBuilder.HoleResult()

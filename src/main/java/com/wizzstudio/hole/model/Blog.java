@@ -8,7 +8,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:23
  * @Version 1.0
  */
-public class Blog implements Serializable {
+public class Blog implements Serializable ,DateComparable{
 
     private Integer id;
 
@@ -32,8 +32,10 @@ public class Blog implements Serializable {
 
     private Boolean valid;
 
-
-
+    @Override
+    public Date getDate() {
+        return releaseTime;
+    }
 
 
     public static final class BlogBuilder {

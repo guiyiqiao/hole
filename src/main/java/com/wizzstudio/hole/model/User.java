@@ -3,6 +3,7 @@ package com.wizzstudio.hole.model;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * @Author 桂乙侨
@@ -21,9 +22,6 @@ public class User implements Serializable {
     private String nickName;
 
     private Boolean valid;
-
-
-
 
 
     public static final class UserBuilder {

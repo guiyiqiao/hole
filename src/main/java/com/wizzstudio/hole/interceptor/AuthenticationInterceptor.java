@@ -54,7 +54,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        //检查是否有passtoken注解，有则跳过认证
+        //检查是否有 pass_token 注解，有则跳过认证
         if (method.isAnnotationPresent(PassToken.class)) {
             PassToken passToken = method.getAnnotation(PassToken.class);
             if (passToken.required()) {
@@ -68,7 +68,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if (userLogin.required()) {
                 // 执行认证
                 if (StringUtils.isEmpty(token)) {
-                    throw new AuthException("无token，请先登录");
+                    throw new AuthException("请先登录");
                 }
                 // 获取 token 中的 userid
                 Integer userId;
@@ -88,7 +88,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
                 if(access_token== null){
                     //access_token 过期
-                    refreshToken(request,response);
+                    return refreshToken(request,response);
                 }else{
                     return token.equals(access_token);
                 }
@@ -134,7 +134,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             // 刷新AccessToken，设置时间戳为当前最新时间戳
             token = tokenUtil.sign(userId, currentTimeMillis);
             redisTemplate.boundValueOps(TokenConstant.USER_TOKEN.toString()+userId)
-                    .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.SECONDS);
+                    .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.HOURS);
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             httpServletResponse.setHeader("Authorization", token);
             httpServletResponse.setHeader("Access-Control-Expose-Headers", "Authorization");

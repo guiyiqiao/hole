@@ -20,18 +20,30 @@ public class Comment implements Serializable ,TimelineComparable{
     private Integer thank;
 
     //是否为私信，默认false
-    private Boolean state;
+    private Boolean overt;
 
     //是否被举报
-    private Boolean tipOff;
+    private Boolean report;
 
-    private Date releaseTime;
+    private Date publishTime;
 
     private Boolean valid;
 
 
-
-
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", blogId=" + blogId +
+                ", content='" + content + '\'' +
+                ", thank=" + thank +
+                ", overt=" + overt +
+                ", report=" + report +
+                ", publishTime=" + publishTime +
+                ", valid=" + valid +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -73,28 +85,28 @@ public class Comment implements Serializable ,TimelineComparable{
         this.thank = thank;
     }
 
-    public Boolean getState() {
-        return state;
+    public Boolean getOvert() {
+        return overt;
     }
 
-    public void setState(Boolean state) {
-        this.state = state;
+    public void setOvert(Boolean overt) {
+        this.overt = overt;
     }
 
-    public Boolean getTipOff() {
-        return tipOff;
+    public Boolean getReport() {
+        return report;
     }
 
-    public void setTipOff(Boolean tipOff) {
-        this.tipOff = tipOff;
+    public void setReport(Boolean report) {
+        this.report = report;
     }
 
-    public Date getReleaseTime() {
-        return releaseTime;
+    public Date getPublishTime() {
+        return publishTime;
     }
 
-    public void setReleaseTime(Date releaseTime) {
-        this.releaseTime = releaseTime;
+    public void setPublishTime(Date publishTime) {
+        this.publishTime = publishTime;
     }
 
     public Boolean getValid() {
@@ -106,23 +118,8 @@ public class Comment implements Serializable ,TimelineComparable{
     }
 
     @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", blogId=" + blogId +
-                ", content='" + content + '\'' +
-                ", thank=" + thank +
-                ", state=" + state +
-                ", tipOff=" + tipOff +
-                ", releaseTime=" + releaseTime +
-                ", valid=" + valid +
-                '}';
-    }
-
-    @Override
     public Date getDate() {
-        return releaseTime;
+        return null;
     }
 
     public static final class CommentBuilder {
@@ -132,10 +129,10 @@ public class Comment implements Serializable ,TimelineComparable{
         private String content;
         private Integer thank;
         //是否为私信，默认false
-        private Boolean state;
+        private Boolean overt;
         //是否被举报
-        private Boolean tipOff;
-        private Date releaseTime;
+        private Boolean report;
+        private Date publishTime;
         private Boolean valid;
 
         private CommentBuilder() {
@@ -170,18 +167,18 @@ public class Comment implements Serializable ,TimelineComparable{
             return this;
         }
 
-        public CommentBuilder withState(Boolean state) {
-            this.state = state;
+        public CommentBuilder withOvert(Boolean overt) {
+            this.overt = overt;
             return this;
         }
 
-        public CommentBuilder withTipOff(Boolean tipOff) {
-            this.tipOff = tipOff;
+        public CommentBuilder withReport(Boolean report) {
+            this.report = report;
             return this;
         }
 
-        public CommentBuilder withReleaseTime(Date releaseTime) {
-            this.releaseTime = releaseTime;
+        public CommentBuilder withPublishTime(Date publishTime) {
+            this.publishTime = publishTime;
             return this;
         }
 
@@ -197,9 +194,9 @@ public class Comment implements Serializable ,TimelineComparable{
             comment.setBlogId(blogId);
             comment.setContent(content);
             comment.setThank(thank);
-            comment.setState(state);
-            comment.setTipOff(tipOff);
-            comment.setReleaseTime(releaseTime);
+            comment.setOvert(overt);
+            comment.setReport(report);
+            comment.setPublishTime(publishTime);
             comment.setValid(valid);
             return comment;
         }

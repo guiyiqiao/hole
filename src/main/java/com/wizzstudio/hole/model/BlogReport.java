@@ -16,11 +16,22 @@ public class BlogReport implements Serializable {
     private Integer blogId;
 
     //举报其他详情
-    private String content;
+    private String reason;
 
     private Integer userId;
     //是否已经被处理
     private Boolean solved;
+
+    @Override
+    public String toString() {
+        return "BlogReport{" +
+                "id=" + id +
+                ", blogId=" + blogId +
+                ", reason='" + reason + '\'' +
+                ", userId=" + userId +
+                ", solved=" + solved +
+                '}';
+    }
 
     public Integer getId() {
         return id;
@@ -38,12 +49,12 @@ public class BlogReport implements Serializable {
         this.blogId = blogId;
     }
 
-    public String getContent() {
-        return content;
+    public String getReason() {
+        return reason;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public Integer getUserId() {
@@ -62,22 +73,11 @@ public class BlogReport implements Serializable {
         this.solved = solved;
     }
 
-    @Override
-    public String toString() {
-        return "BlogReport{" +
-                "id=" + id +
-                ", blogId=" + blogId +
-                ", content='" + content + '\'' +
-                ", userId=" + userId +
-                ", solved=" + solved +
-                '}';
-    }
-
     public static final class BlogReportBuilder {
         private Integer id;
         private Integer blogId;
         //举报其他详情
-        private String content;
+        private String reason;
         private Integer userId;
         //是否已经被处理
         private Boolean solved;
@@ -99,8 +99,8 @@ public class BlogReport implements Serializable {
             return this;
         }
 
-        public BlogReportBuilder withContent(String content) {
-            this.content = content;
+        public BlogReportBuilder withReason(String reason) {
+            this.reason = reason;
             return this;
         }
 
@@ -118,7 +118,7 @@ public class BlogReport implements Serializable {
             BlogReport blogReport = new BlogReport();
             blogReport.setId(id);
             blogReport.setBlogId(blogId);
-            blogReport.setContent(content);
+            blogReport.setReason(reason);
             blogReport.setUserId(userId);
             blogReport.setSolved(solved);
             return blogReport;

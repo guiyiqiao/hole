@@ -54,7 +54,7 @@ public class BlogController {
         Blog blog = new Blog();
         BeanUtils.copyProperties(blog,blogVo);
         blog.setUserId(UserIdUtil.getUserId(request));
-        blog.setReleaseTime(new Date());
+        blog.setPublishTime(new Date());
 
         return blogService.addMatter(blog);
     }

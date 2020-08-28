@@ -13,8 +13,8 @@ public class CommentReport implements Serializable {
 
     private Integer commentId;
 
-    //举报详情
-    private String content;
+    //举报原因
+    private String reason;
 
     private Integer userId;
 
@@ -26,7 +26,7 @@ public class CommentReport implements Serializable {
         return "CommentReport{" +
                 "id=" + id +
                 ", commentId=" + commentId +
-                ", content='" + content + '\'' +
+                ", reason='" + reason + '\'' +
                 ", userId=" + userId +
                 ", solved=" + solved +
                 '}';
@@ -48,12 +48,12 @@ public class CommentReport implements Serializable {
         this.commentId = commentId;
     }
 
-    public String getContent() {
-        return content;
+    public String getReason() {
+        return reason;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public Integer getUserId() {
@@ -75,8 +75,8 @@ public class CommentReport implements Serializable {
     public static final class CommentReportBuilder {
         private Integer id;
         private Integer commentId;
-        //举报详情
-        private String content;
+        //举报原因
+        private String reason;
         private Integer userId;
         //是否已经被处理
         private Boolean solved;
@@ -98,8 +98,8 @@ public class CommentReport implements Serializable {
             return this;
         }
 
-        public CommentReportBuilder withContent(String content) {
-            this.content = content;
+        public CommentReportBuilder withReason(String reason) {
+            this.reason = reason;
             return this;
         }
 
@@ -117,7 +117,7 @@ public class CommentReport implements Serializable {
             CommentReport commentReport = new CommentReport();
             commentReport.setId(id);
             commentReport.setCommentId(commentId);
-            commentReport.setContent(content);
+            commentReport.setReason(reason);
             commentReport.setUserId(userId);
             commentReport.setSolved(solved);
             return commentReport;

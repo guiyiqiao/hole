@@ -4,14 +4,14 @@
 <mapper namespace="com.wizzstudio.hole.mapper.BlogMapper">
 
     <select id="listBlogByUserId" resultType="com.wizzstudio.hole.model.Blog">
-        SELECT id,user_id,title,content,hug,release_time,evaluable
-        ,state,valid
+        SELECT id,user_id,title,content,hug,publish_time,evaluable
+        ,overt,valid
         FROM blog
         WHERE user_id = #{userId}
     </select>
     <select id="listBlogByComment" resultType="com.wizzstudio.hole.model.Blog">
-        SELECT id,user_id,title,content,hug,release_time,evaluable
-        ,state,valid
+        SELECT id,user_id,title,content,hug,publish_time,evaluable
+        ,overt,valid
         FROM blog
         WHERE id in (
             SELECT blog_id

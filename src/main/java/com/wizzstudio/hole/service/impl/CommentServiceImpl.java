@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = Comment.CommentBuilder.aComment()
                 .withBlogId(blogId)
                 .withValid(true)
-                .withState(true)
+                .withOvert(true)
                 .build();
         List<Comment> comments = commentMapper.select(comment);
         PageInfo<Comment> pageInfo = new PageInfo<>(comments);

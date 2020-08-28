@@ -29,18 +29,18 @@ public class ReportController {
      * 需求2.对心事的举报操作
      * report 记为举报
      * @param blogId  被举报的心事id
-     * @param content 举报类别/内容
+     * @param reason 举报原因
      * @return
      */
     @PostMapping("blog")
     @UserLogin
     public HoleResult reportBlog(@RequestParam("blogId") Integer blogId,
-                             @RequestParam("content") String content,
+                             @RequestParam("reason") String reason,
                              HttpServletRequest request){
         BlogReport blogReport = BlogReport.BlogReportBuilder.aBlogReport()
                 .withUserId(UserIdUtil.getUserId(request))
                 .withBlogId(blogId)
-                .withContent(content)
+                .withReason(reason)
                 .build();
         return  reportService.report(blogReport);
     }
@@ -49,21 +49,21 @@ public class ReportController {
     /**
      * 需求三 举报回声
      * @param commentId
-     * @param content
+     * @param reason
      * @param request
      * @return
      */
     @PostMapping("comment")
     @UserLogin
     public HoleResult reportComment(@RequestParam("commentId") Integer commentId,
-                             @RequestParam("content") String content,
+                             @RequestParam("reason") String reason,
                              HttpServletRequest request){
-        if(commentId<= 0 || StringUtils.isEmpty(content))
+        if(commentId<= 0 || StringUtils.isEmpty(reason))
             return HoleResult.failure("参数错误，请重试");
         CommentReport commentReport = CommentReport.CommentReportBuilder.aCommentReport()
                 .withSolved(false)
                 .withCommentId(commentId)
-                .withContent(content)
+                .withReason(reason)
                 .withUserId(UserIdUtil.getUserId(request))
                 .build();
         return reportService.report(commentReport);

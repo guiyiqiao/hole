@@ -40,8 +40,8 @@ public class CommentController {
         Comment comment  = new Comment();
         BeanUtils.copyProperties(comment,commentVo);
         comment.setThank(0);
-        comment.setTipOff(false);
-        comment.setReleaseTime(new Date());
+        comment.setReport(false);
+        comment.setPublishTime(new Date());
         comment.setUserId(UserIdUtil.getUserId(request));
         return commentService.addComment(comment);
     }

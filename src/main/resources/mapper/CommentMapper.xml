@@ -4,7 +4,7 @@
 <mapper namespace="com.wizzstudio.hole.mapper.CommentMapper">
 
     <select id="timeline" resultType="com.wizzstudio.hole.model.Comment">
-        SELECT id,user_id,blog_id,content,thank，state,release_time,tip_off,valid
+        SELECT id,user_id,blog_id,content,thank，overt,publish_time,report,valid
         FROM comment
         WHERE user_id =#{userId}
         OR blog_id IN(

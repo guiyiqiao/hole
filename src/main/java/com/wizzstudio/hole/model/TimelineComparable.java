@@ -11,7 +11,6 @@ import java.util.List;
  * @Date 2020/8/26 10:15
  * @Version 1.0
  */
-public interface DateComparable {
+public interface TimelineComparable {
     Date getDate();
-
 }

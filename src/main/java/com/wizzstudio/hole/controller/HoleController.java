@@ -3,8 +3,10 @@ package com.wizzstudio.hole.controller;
 
 import com.wizzstudio.hole.annotation.PassToken;
 import com.wizzstudio.hole.annotation.UserLogin;
+import com.wizzstudio.hole.service.TimelineService;
 import com.wizzstudio.hole.service.WxService;
 import com.wizzstudio.hole.util.HoleResult;
+import com.wizzstudio.hole.util.UserIdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("hole")
 public class HoleController {
 
+    @Autowired
+    private WxService wxService;
+
+    @Autowired
+    private TimelineService timelineService;
     /**
      * 需求6.时间轴
      * @param request
@@ -42,11 +49,9 @@ public class HoleController {
     @GetMapping("timeline")
     @UserLogin
     public HoleResult timeline(HttpServletRequest request){
-        return null;
+        return timelineService.listTimeline(UserIdUtil.getUserId(request));
     }
 
-    @Autowired
-    private WxService wxService;
 
     /**
      * 需求1.入住树洞有声,注册/登陆

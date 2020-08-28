@@ -11,7 +11,7 @@
  Target Server Version : 80018
  File Encoding         : 65001
 
- Date: 26/08/2020 22:44:54
+ Date: 27/08/2020 21:18:03
 */
 
 SET NAMES utf8mb4;
@@ -26,13 +26,13 @@ CREATE TABLE `blog`  (
   `user_id` int(11) NOT NULL COMMENT '所属用户',
   `title` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '心事标题',
   `content` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '心事内容',
-  `hug` int(11) UNSIGNED ZEROFILL NULL DEFAULT 00000000000 COMMENT '拥抱',
+  `hug` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '拥抱',
   `release_time` datetime(0) NOT NULL COMMENT '发布时间',
   `evaluable` tinyint(1) NOT NULL DEFAULT 1 COMMENT '可评论的?0不可评论1可评论，默认可评论',
   `state` tinyint(1) NOT NULL DEFAULT 1 COMMENT '0私密1公开，默认公开',
   `valid` tinyint(1) NOT NULL DEFAULT 1 COMMENT '删除保留位，0无效1有效，默认有效',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for blog_report
@@ -43,6 +43,7 @@ CREATE TABLE `blog_report`  (
   `blog_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '举报内容详情',
+  `solved` tinyint(1) UNSIGNED ZEROFILL NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `blog_id`(`blog_id`) USING BTREE,
   INDEX `user_id`(`user_id`) USING BTREE,
@@ -66,6 +67,23 @@ CREATE TABLE `comment`  (
   `valid` tinyint(1) NOT NULL DEFAULT 1 COMMENT '删除保留位，0无效1有效，默认有效',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for comment_report
+-- ----------------------------
+DROP TABLE IF EXISTS `comment_report`;
+CREATE TABLE `comment_report`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '举报内容详情',
+  `solved` tinyint(1) UNSIGNED ZEROFILL NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `comment_id`(`comment_id`) USING BTREE,
+  INDEX `user_id`(`user_id`) USING BTREE,
+  CONSTRAINT `comment_report_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `comment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `comment_report_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for user

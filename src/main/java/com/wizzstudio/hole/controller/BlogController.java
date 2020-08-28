@@ -7,10 +7,12 @@ import com.wizzstudio.hole.model.vo.BlogVo;
 import com.wizzstudio.hole.service.BlogService;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.TokenUtil;
+import com.wizzstudio.hole.util.UserIdUtil;
 import io.swagger.models.auth.In;
 import jdk.nashorn.internal.parser.Token;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +30,19 @@ import java.util.List;
 @RestController
 @RequestMapping("hole/blog")
 public class BlogController {
-
-    @Autowired
-    private TokenUtil tokenUtil;
-
     @Resource
     private BlogService blogService;
+
+    /**
+     * 需求二、心事大厅查询心事列表
+     * @return
+     */
+    @GetMapping
+    public HoleResult listBlog(@RequestParam("pageSize") int pageSize,
+                               @RequestParam("pageNum") int pageNum){
+        return blogService.listBlog(pageNum, pageSize);
+    }
+
     /**
      * 需求2.添加心事接口
      * @param blogVo
@@ -44,7 +53,7 @@ public class BlogController {
     public HoleResult addBlog(@Valid BlogVo blogVo, HttpServletRequest request){
         Blog blog = new Blog();
         BeanUtils.copyProperties(blog,blogVo);
-        blog.setUserId(getUserId(request));
+        blog.setUserId(UserIdUtil.getUserId(request));
         blog.setReleaseTime(new Date());
 
         return blogService.addMatter(blog);
@@ -59,58 +68,34 @@ public class BlogController {
 
     @PostMapping("hug/{blogId}")
     @UserLogin
-    public HoleResult addHug(@PathVariable("blogId") Integer blogId,HttpServletRequest request){
-        return blogService.addHug(blogId,getUserId(request));
+    public HoleResult addHug(@PathVariable("blogId") Integer blogId,
+                             HttpServletRequest request){
+        return blogService.addHug(blogId,UserIdUtil.getUserId(request));
     }
 
-    /**
-     * 需求2.对心事的举报操作
-     * report 记为举报
-     * @param blogId  被举报的心事id
-     * @param content 举报类别/内容
-     * @return
-     */
-    @PostMapping("report/{blogId}")
-    @UserLogin
-    public HoleResult report(@PathVariable("blogId") Integer blogId,
-                             @RequestParam("content") String content,
-                             HttpServletRequest request){
-        BlogReport blogReport = BlogReport.BlogReportBuilder.aBlogReport()
-                .withUserId(getUserId(request))
-                .withBlogId(blogId)
-                .withContent(content)
-                .build();
-        return  blogService.report(blogReport);
-    }
 
 
     /**
      * 需求4.查询我倾诉的心事
      * @return
      */
-    @GetMapping
+    @GetMapping("mine")
     @UserLogin
-    public HoleResult getBlog(HttpServletRequest request){
+    public HoleResult getBlog(HttpServletRequest request, int pageNum,int pageSize){
 
-        List<Blog> blogList = blogService.listBlogByUserId(getUserId(request));
-        return HoleResult.success(blogList);
+        return blogService.listMyBlog(UserIdUtil.getUserId(request),pageNum,pageSize);
     }
 
     /**查询我回应的心事
-     * 需求5、
+     * 需求四
      * @param request
      * @return
      */
-    @GetMapping("user")
+    @GetMapping("other")
     @UserLogin
     public HoleResult getBlogByUser(HttpServletRequest request){
 
-        return HoleResult.success(blogService.getBlogByUserComment(getUserId(request)));
+        return HoleResult.success(blogService.getBlogByUserComment(UserIdUtil.getUserId(request)));
     }
 
-    private Integer getUserId(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
-        Integer userId = tokenUtil.getUserId(token);
-        return userId;
-    }
 }

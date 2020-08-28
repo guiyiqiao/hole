@@ -8,7 +8,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:26
  * @Version 1.0
  */
-public class Comment implements Serializable ,DateComparable{
+public class Comment implements Serializable ,TimelineComparable{
     private Integer id;
 
     private Integer userId;

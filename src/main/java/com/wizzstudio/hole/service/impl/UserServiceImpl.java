@@ -3,6 +3,7 @@ package com.wizzstudio.hole.service.impl;
 import com.wizzstudio.hole.mapper.UserMapper;
 import com.wizzstudio.hole.model.User;
 import com.wizzstudio.hole.service.UserService;
+import com.wizzstudio.hole.util.HoleResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,5 +22,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByOpenId(String openId) {
         return userMapper.queryUserByOpenId(openId);
+    }
+
+    /**
+     * 需求四 查询用户信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public HoleResult getUserInfo(Integer userId) {
+        return HoleResult.success(userMapper.selectByPrimaryKey(userId));
     }
 }

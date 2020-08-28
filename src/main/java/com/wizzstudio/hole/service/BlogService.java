@@ -14,11 +14,13 @@ import java.util.List;
  */
 public interface BlogService {
 
+    HoleResult listBlog(int pageNum,int pageSize);
+
     HoleResult addMatter(Blog blog);
 
     HoleResult addHug(Integer blogId,Integer userId);
 
-    HoleResult report(BlogReport report);
+    HoleResult listMyBlog(Integer userId,int pageNum,int pageSize);
 
     List<Blog> listBlogByUserId(Integer userId);
 

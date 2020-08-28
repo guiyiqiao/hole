@@ -57,7 +57,7 @@ public class TokenUtil {
 
 
 
-    public Integer getUserId(String token){
+    public static Integer getUserId(String token){
         DecodedJWT decodedJWT=JWT.decode(token);
         return decodedJWT.getClaim("userId").asInt();
     }

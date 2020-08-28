@@ -2,6 +2,7 @@ package com.wizzstudio.hole.service;
 
 
 import com.wizzstudio.hole.model.User;
+import com.wizzstudio.hole.util.HoleResult;
 
 /**
  * @Author 桂乙侨
@@ -10,4 +11,6 @@ import com.wizzstudio.hole.model.User;
  */
 public interface UserService {
     User getUserByOpenId(String openId);
+
+    HoleResult getUserInfo(Integer userId);
 }

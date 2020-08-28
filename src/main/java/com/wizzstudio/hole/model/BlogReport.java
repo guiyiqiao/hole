@@ -19,7 +19,8 @@ public class BlogReport implements Serializable {
     private String content;
 
     private Integer userId;
-
+    //是否已经被处理
+    private Boolean solved;
 
     public Integer getId() {
         return id;
@@ -53,6 +54,14 @@ public class BlogReport implements Serializable {
         this.userId = userId;
     }
 
+    public Boolean getSolved() {
+        return solved;
+    }
+
+    public void setSolved(Boolean solved) {
+        this.solved = solved;
+    }
+
     @Override
     public String toString() {
         return "BlogReport{" +
@@ -60,9 +69,9 @@ public class BlogReport implements Serializable {
                 ", blogId=" + blogId +
                 ", content='" + content + '\'' +
                 ", userId=" + userId +
+                ", solved=" + solved +
                 '}';
     }
-
 
     public static final class BlogReportBuilder {
         private Integer id;
@@ -70,6 +79,8 @@ public class BlogReport implements Serializable {
         //举报其他详情
         private String content;
         private Integer userId;
+        //是否已经被处理
+        private Boolean solved;
 
         private BlogReportBuilder() {
         }
@@ -98,12 +109,18 @@ public class BlogReport implements Serializable {
             return this;
         }
 
+        public BlogReportBuilder withSolved(Boolean solved) {
+            this.solved = solved;
+            return this;
+        }
+
         public BlogReport build() {
             BlogReport blogReport = new BlogReport();
             blogReport.setId(id);
             blogReport.setBlogId(blogId);
             blogReport.setContent(content);
             blogReport.setUserId(userId);
+            blogReport.setSolved(solved);
             return blogReport;
         }
     }

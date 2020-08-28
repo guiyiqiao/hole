@@ -21,8 +21,8 @@ public class BlogVo implements Serializable {
 
     private Boolean evaluable = true;
 
-    //是否公开，默认公开
-    private Boolean state = true;
+    //是否公开，默认私密
+    private Boolean state = false;
 
     public String getTitle() {
         return title;

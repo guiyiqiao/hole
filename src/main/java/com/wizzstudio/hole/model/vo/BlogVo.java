@@ -11,15 +11,15 @@ import java.io.Serializable;
  * @Version 1.0
  */
 public class BlogVo implements Serializable {
-    @NotBlank(message = "标题不能为空")
+    @NotBlank(message = "请填写标题呦")
     private String title;
 
-    @NotBlank(message = "内容不能为空")
+    @NotBlank(message = "还没有写下内容呦")
     private String content;
 
-    //是否可评论，默认可评论
+    //是否可评论，默认不可评论
 
-    private Boolean evaluable = true;
+    private Boolean evaluable = false;
 
     //是否公开，默认私密
     private Boolean state = false;

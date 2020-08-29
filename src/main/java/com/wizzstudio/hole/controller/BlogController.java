@@ -33,15 +33,23 @@ public class BlogController {
     @Resource
     private BlogService blogService;
 
-    /**
+   /* *//**
      * 需求二、心事大厅查询心事列表
      * @return
-     */
+     *//*
     @GetMapping
     public HoleResult listBlog(@RequestParam("pageSize") int pageSize,
                                @RequestParam("pageNum") int pageNum){
         return blogService.listBlog(pageNum, pageSize);
     }
+*/
+
+    @GetMapping
+    public HoleResult getBlogById(@RequestParam("blogId") Integer blogId){
+        return blogService.getBlogById(blogId);
+    }
+
+
 
     /**
      * 需求2.添加心事接口
@@ -61,16 +69,14 @@ public class BlogController {
 
     /**
      * 需求2.对心事添加hug
-     * 将userId存储于缓存中，以防止短期重复hug
+     * 允许重复拥抱
      * @param blogId
      * @return
      */
 
     @PostMapping("hug/{blogId}")
-    @UserLogin
-    public HoleResult addHug(@PathVariable("blogId") Integer blogId,
-                             HttpServletRequest request){
-        return blogService.addHug(blogId,UserIdUtil.getUserId(request));
+    public HoleResult addHug(@PathVariable("blogId") Integer blogId){
+        return blogService.addHug(blogId);
     }
 
 
@@ -98,4 +104,11 @@ public class BlogController {
         return HoleResult.success(blogService.getBlogByUserComment(UserIdUtil.getUserId(request)));
     }
 
+    @UserLogin
+    @DeleteMapping
+    public HoleResult deleteBlog(@RequestParam("blogId") Integer blogId,
+                                 HttpServletRequest request){
+        //待完成
+        return null;
+    }
 }

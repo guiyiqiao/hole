@@ -8,10 +8,7 @@ import com.wizzstudio.hole.service.WxService;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.TokenUtil;
 import com.wizzstudio.hole.util.WxChatUtil;
-import io.swagger.models.auth.In;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -69,7 +66,6 @@ public class WxServiceImpl implements WxService {
             user = User.UserBuilder.anUser()
                 .withOpenId(openid)
                 .withNickName(StringUtils.isEmpty(nickName)?openid:nickName)
-                .withAddress(addr)
                 .build();
             int t = userMapper.insertUser(user);
             if(t <= 0)

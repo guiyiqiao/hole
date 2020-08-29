@@ -9,6 +9,5 @@ import java.util.List;
 @Mapper
 public interface CommentMapper extends tk.mybatis.mapper.common.Mapper<Comment> {
 
-    List<Comment> timeline(Integer userId);
 
 }

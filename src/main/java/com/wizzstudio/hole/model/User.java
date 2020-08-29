@@ -1,9 +1,6 @@
 package com.wizzstudio.hole.model;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * @Author 桂乙侨
@@ -17,8 +14,6 @@ public class User implements Serializable {
     //微信小程序唯一id
     private String openId;
 
-    private Integer address;
-
     private String nickName;
 
     private Boolean valid;
@@ -27,7 +22,6 @@ public class User implements Serializable {
     public static final class UserBuilder {
         private Integer id;
         private String openId;
-        private Integer address;
         private String nickName;
         private Boolean valid;
 
@@ -48,10 +42,6 @@ public class User implements Serializable {
             return this;
         }
 
-        public UserBuilder withAddress(Integer address) {
-            this.address = address;
-            return this;
-        }
 
         public UserBuilder withNickName(String nickName) {
             this.nickName = nickName;
@@ -68,7 +58,6 @@ public class User implements Serializable {
             user.id = this.id;
             user.openId = this.openId;
             user.nickName = this.nickName;
-            user.address = this.address;
             user.valid = this.valid;
             return user;
         }
@@ -93,14 +82,6 @@ public class User implements Serializable {
         this.openId = openId;
     }
 
-    public Integer getAddress() {
-        return address;
-    }
-
-    public void setAddress(Integer address) {
-        this.address = address;
-    }
-
     public String getNickName() {
         return nickName;
     }
@@ -122,7 +103,6 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", openId='" + openId + '\'' +
-                ", address=" + address +
                 ", nickName='" + nickName + '\'' +
                 ", valid=" + valid +
                 '}';

@@ -3,6 +3,7 @@ package com.wizzstudio.hole.controller;
 import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.model.CommentReport;
+import com.wizzstudio.hole.model.EchoReport;
 import com.wizzstudio.hole.service.ReportService;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.UserIdUtil;
@@ -48,6 +49,28 @@ public class ReportController {
 
     /**
      * 需求三 举报回声
+     * @param echoId
+     * @param reason
+     * @param request
+     * @return
+     */
+    @PostMapping("echo")
+    @UserLogin
+    public HoleResult reportEcho(@RequestParam("echoId") Integer echoId,
+                             @RequestParam("reason") String reason,
+                             HttpServletRequest request){
+        if(echoId<= 0 || StringUtils.isEmpty(reason))
+            return HoleResult.failure("参数错误，请重试");
+        EchoReport echoReport = EchoReport.EchoReportBuilder.anEchoReport()
+                .withEchoId(echoId)
+                .withReason(reason)
+                .withSolved(false)
+                .withUserId(UserIdUtil.getUserId(request))
+                .build();
+        return reportService.report(echoReport);
+    }
+    /**
+     * 需求三 举报回声
      * @param commentId
      * @param reason
      * @param request
@@ -56,8 +79,8 @@ public class ReportController {
     @PostMapping("comment")
     @UserLogin
     public HoleResult reportComment(@RequestParam("commentId") Integer commentId,
-                             @RequestParam("reason") String reason,
-                             HttpServletRequest request){
+                                    @RequestParam("reason") String reason,
+                                    HttpServletRequest request){
         if(commentId<= 0 || StringUtils.isEmpty(reason))
             return HoleResult.failure("参数错误，请重试");
         CommentReport commentReport = CommentReport.CommentReportBuilder.aCommentReport()

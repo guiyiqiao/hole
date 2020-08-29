@@ -13,8 +13,4 @@ import io.swagger.models.auth.In;
 public interface CommentService {
     HoleResult addComment(Comment comment);
 
-    HoleResult listByBlogId(Integer blogId,int pageNum,int pageSize);
-
-    HoleResult thank(Integer commentId,Integer userId);
-
 }

@@ -12,5 +12,7 @@ import com.wizzstudio.hole.util.HoleResult;
 public interface UserService {
     User getUserByOpenId(String openId);
 
+    HoleResult updateNickname(User user);
+
     HoleResult getUserInfo(Integer userId);
 }

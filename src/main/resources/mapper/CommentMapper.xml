@@ -3,16 +3,5 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wizzstudio.hole.mapper.CommentMapper">
 
-    <select id="timeline" resultType="com.wizzstudio.hole.model.Comment">
-        SELECT id,user_id,blog_id,content,thank，overt,publish_time,report,valid
-        FROM comment
-        WHERE user_id =#{userId}
-        OR blog_id IN(
-            SELECT id
-            FROM blog
-            WHERE user_id = #{userId}
-        )
-
-    </select>
 
 </mapper>

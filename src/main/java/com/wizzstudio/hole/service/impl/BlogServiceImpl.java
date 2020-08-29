@@ -9,6 +9,7 @@ import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.model.constant.CacheKey;
 import com.wizzstudio.hole.service.BlogService;
 import com.wizzstudio.hole.util.HoleResult;
+import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,21 @@ public class BlogServiceImpl implements BlogService {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+
+    /**
+     * 需求2 查询心事详情
+     * @param blogId
+     * @return
+     */
+    @Override
+    public HoleResult getBlogById(Integer blogId) {
+
+        return HoleResult.success(blogMapper.selectByPrimaryKey(blogId));
+    }
+
+
+
 
     /**
      * 需求二、查询心事列表
@@ -58,34 +74,20 @@ public class BlogServiceImpl implements BlogService {
     }
 
     /**
-     * 需求二、对心事点击hug，使用缓存防止用户重复点击
+     * 需求二、对心事点击hug，使用缓存防止短时间数据库不断写入
      * 还未实现将hug数写入数据库(hug比较频繁,修改量小,且数据不需要极高的可靠性，暂定为定期写入缓存中的数据
      * @param blogId
      * @return
      */
     @Override
-    public HoleResult addHug(Integer blogId,Integer userId) {
+    public HoleResult addHug(Integer blogId) {
         Blog blog = blogMapper.selectByPrimaryKey(blogId);
         if(blog == null)
             return HoleResult.failure("心事不存在！");
-        Boolean hasKey = redisTemplate.hasKey(CacheKey.getBlogHugUserKey(blogId));
-        if(!hasKey){
-            //如果没有用户列表hash键，则新建一个,过期时间默认为30天
-            redisTemplate.boundHashOps(CacheKey.getBlogHugUserKey(blogId))
-                    .expire(30, TimeUnit.DAYS);
-        }else{
-            Object o = redisTemplate.boundHashOps(CacheKey.getBlogHugUserKey(blogId))
-                    .get(userId);
-            if(o !=null){
-                return HoleResult.failure("不可重复拥抱");
-            }
-        }
-
-        //添加hug数量，并将userId存入最近hug用户
-        redisTemplate.boundValueOps(CacheKey.getBlogHugKey(blogId))
-                .increment();
-        redisTemplate.boundHashOps(CacheKey.getBlogHugUserKey(blogId))
-                .putIfAbsent(userId,1);
+        BoundValueOperations boundValueOperations = redisTemplate.boundValueOps(CacheKey.getBlogHugKey(blogId));
+        boundValueOperations
+                .setIfAbsent(0,2,TimeUnit.DAYS);
+        boundValueOperations.increment();
         return HoleResult.success();
     }
 
@@ -107,6 +109,18 @@ public class BlogServiceImpl implements BlogService {
         List<Blog> select = blogMapper.select(blog);
         PageInfo<Blog> pageInfo = new PageInfo<>(select);
         return HoleResult.success(pageInfo);
+    }
+
+    /**
+     * 删除心事 以及 回声，待完成
+     * @param blog
+     * @return
+     */
+    @Override
+    public HoleResult deleteBlog(Blog blog) {
+        blog.setValid(false);
+        int ret = blogMapper.updateByPrimaryKeySelective(blog);
+        return null;
     }
 
     @Override

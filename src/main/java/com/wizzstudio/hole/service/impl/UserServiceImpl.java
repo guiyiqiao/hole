@@ -25,6 +25,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 修改昵称
+     * @param user
+     * @return
+     */
+    @Override
+    public HoleResult updateNickname(User user) {
+        int ret = userMapper.updateByPrimaryKeySelective(user);
+        return ret > 0? HoleResult.success():HoleResult.failure();
+    }
+
+    /**
      * 需求四 查询用户信息
      * @param userId
      * @return

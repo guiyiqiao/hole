@@ -2,8 +2,10 @@ package com.wizzstudio.hole.service.impl;
 
 import com.wizzstudio.hole.mapper.BlogReportMapper;
 import com.wizzstudio.hole.mapper.CommentReportMapper;
+import com.wizzstudio.hole.mapper.EchoReportMapper;
 import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.model.CommentReport;
+import com.wizzstudio.hole.model.EchoReport;
 import com.wizzstudio.hole.service.ReportService;
 import com.wizzstudio.hole.util.HoleResult;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class ReportServiceImpl implements ReportService {
     @Resource
     private BlogReportMapper blogReportMapper;
 
+    @Resource
+    private EchoReportMapper echoReportMapper;
     /**
      * 需求二、举报心事
      * 待完成
@@ -44,5 +48,12 @@ public class ReportServiceImpl implements ReportService {
     public HoleResult report(CommentReport commentReport){
         int ret = commentReportMapper.insertSelective(commentReport);
         return ret > 0? HoleResult.success():HoleResult.failure();
+    }
+
+    @Override
+    public HoleResult report(EchoReport echoReport) {
+        int ret = echoReportMapper.insertSelective(echoReport);
+        return ret > 0? HoleResult.success():HoleResult.failure();
+
     }
 }

@@ -1,5 +1,6 @@
 package com.wizzstudio.hole.model;
 
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -8,6 +9,7 @@ import java.util.Date;
  * @Version 1.0
  */
 public class Comment {
+    @Id
     private Integer id;
 
     private Integer userId;

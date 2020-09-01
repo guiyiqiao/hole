@@ -14,4 +14,6 @@ import java.util.List;
 public interface EchoMapper extends Mapper<Echo> {
 
     List<Echo> timeline(Integer userId);
+
+    int openEcho(Integer echoId,Integer userId);
 }

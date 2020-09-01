@@ -14,5 +14,7 @@ public interface EchoService {
 
     HoleResult thank(Integer commentId);
 
+    HoleResult openEcho(Integer echoId,Integer userId);
+
     HoleResult listByBlogId(Integer blogId,int pageNum,int pageSize);
 }

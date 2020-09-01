@@ -43,14 +43,15 @@ public class TimelineServiceImpl implements TimelineService {
         blog.setValid(true);
         blog.setUserId(userId);
         List<Blog> blogList = blogMapper.select(blog);
-
         //我发出的回声与我收到的回声
         List<Echo> echoList = echoMapper.timeline(userId);
         List<TimelineComparable> list = new ArrayList<>();
         list.addAll(blogList);
         list.addAll(echoList);
+
         Collections.sort(list,(o1, o2) -> {
-          return   (int)(o1.getDate().getTime() -o2.getDate().getTime());
+            long ret = o1.getDate().getTime() -o2.getDate().getTime();
+          return   (int) ret;
         });
         return HoleResult.success(list);
     }

@@ -4,12 +4,11 @@ package com.wizzstudio.hole.controller;
 import com.wizzstudio.hole.annotation.PassToken;
 import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.service.TimelineService;
-import com.wizzstudio.hole.service.WxService;
+import com.wizzstudio.hole.service.UserService;
 import com.wizzstudio.hole.util.HoleResult;
-import com.wizzstudio.hole.util.UserIdUtil;
+import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HoleController {
 
     @Autowired
-    private WxService wxService;
+    private UserService userService;
 
     @Autowired
     private TimelineService timelineService;
@@ -46,10 +45,10 @@ public class HoleController {
      * @param request
      * @return
      */
-    @GetMapping("timeline")
+    //@GetMapping("timeline")
     @UserLogin
     public HoleResult timeline(HttpServletRequest request){
-        return timelineService.listTimeline(UserIdUtil.getUserId(request));
+        return timelineService.listTimeline(HoleUtils.getUserId(request));
     }
 
 
@@ -59,10 +58,13 @@ public class HoleController {
      * @param nickName 昵称，默认为微信昵称
      * @return
      */
-    @PostMapping("login")
+    //@PostMapping("login")
     @PassToken
-    public HoleResult login(HttpServletResponse response, String code, String nickName){
-        return wxService.wxLogin(response,code,nickName);
+    public HoleResult login(HttpServletRequest request,HttpServletResponse response, String code, String nickName){
+        if(StringUtils.isEmpty(code)){
+            HoleResult.failure("网络异常，请稍后重试！");
+        }
+        return userService.login(request,response,code,nickName);
     }
 
 

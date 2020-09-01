@@ -1,5 +1,6 @@
 package com.wizzstudio.hole.model;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * @Version 1.0
  */
 public class Echo implements Serializable ,TimelineComparable{
+    @Id
     private Integer id;
 
     private Integer userId;
@@ -130,7 +132,7 @@ public class Echo implements Serializable ,TimelineComparable{
 
     @Override
     public Date getDate() {
-        return null;
+        return this.getPublishTime();
     }
 
 

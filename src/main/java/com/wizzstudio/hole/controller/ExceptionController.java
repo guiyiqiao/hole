@@ -2,8 +2,10 @@ package com.wizzstudio.hole.controller;
 
 import com.wizzstudio.hole.exception.AuthException;
 import com.wizzstudio.hole.util.HoleResult;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @Author 桂乙侨
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(AuthException.class)
+    @ResponseBody
     public HoleResult authException(AuthException ex){
         return HoleResult.HoleResultBuilder.HoleResult()
                 .withCode(401)

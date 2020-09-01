@@ -4,13 +4,10 @@ import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.model.User;
 import com.wizzstudio.hole.service.UserService;
 import com.wizzstudio.hole.util.HoleResult;
-import com.wizzstudio.hole.util.UserIdUtil;
+import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,10 +27,10 @@ public class UserController {
      * @param request
      * @return
      */
-    @GetMapping
+    //@GetMapping
     @UserLogin
     public HoleResult getUserInfo(HttpServletRequest request){
-        return  userService.getUserInfo(UserIdUtil.getUserId(request));
+        return  userService.getUserInfo(HoleUtils.getUserId(request));
     }
 
     /**
@@ -44,13 +41,14 @@ public class UserController {
      */
 
     @UserLogin
+    @PutMapping
     public HoleResult updateNickname(@RequestParam("nickname") String nickname,
                                      HttpServletRequest request){
         if(StringUtils.isEmpty(nickname))
             return HoleResult.failure("昵称不能为空");
         User user = new User();
-        user.setNickName(nickname);
-        user.setId(UserIdUtil.getUserId(request));
+        user.setNickname(nickname);
+        user.setId(HoleUtils.getUserId(request));
         return userService.updateNickname(user);
     }
 }

@@ -5,7 +5,7 @@ import com.wizzstudio.hole.model.Comment;
 import com.wizzstudio.hole.service.CommentService;
 import com.wizzstudio.hole.util.HoleResult;
 
-import com.wizzstudio.hole.util.UserIdUtil;
+import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +32,7 @@ public class CommentController {
      * @param content 评论内容
      * @return
      */
-    @PostMapping
+    //@PostMapping
     public HoleResult addComment(@RequestParam("blogId") Integer blogId,
                                  @RequestParam("content") String content,
                                  HttpServletRequest request){
@@ -41,7 +41,7 @@ public class CommentController {
                 .withContent(content)
                 .withPublishTime(new Date())
                 .withReport(false)
-                .withUserId(UserIdUtil.getUserId(request))
+                .withUserId(HoleUtils.getUserId(request))
                 .withValid(true)
                 .build();
         return commentService.addComment(comment);

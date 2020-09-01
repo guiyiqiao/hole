@@ -88,6 +88,7 @@ public class BlogServiceImpl implements BlogService {
         boundValueOperations
                 .setIfAbsent(0,2,TimeUnit.DAYS);
         boundValueOperations.increment();
+        redisTemplate.boundSetOps(CacheKey.getBlogHugSetKey()).add(blogId);
         return HoleResult.success();
     }
 

@@ -2,6 +2,7 @@ package com.wizzstudio.hole.filter;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -14,7 +15,7 @@ import java.io.IOException;
  * @Date 2020/7/20 10:35
  * @Version 1.0
  */
-@WebFilter
+@Component
 public class CorsFilter implements Filter {
 
     @Override
@@ -37,6 +38,7 @@ public class CorsFilter implements Filter {
         res.addHeader("Access-Control-Allow-Origin", "*");
         res.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         res.addHeader("Access-Control-Allow-Headers", "Content-Type,X-CAF-Authorization-Token,sessionToken,X-TOKEN");
+        res.setCharacterEncoding("utf-8");
         if (((HttpServletRequest) servletRequest).getMethod().equals("OPTIONS")) {
             return;
         }

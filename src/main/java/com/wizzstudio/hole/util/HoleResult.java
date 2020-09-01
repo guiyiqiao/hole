@@ -1,12 +1,14 @@
 package com.wizzstudio.hole.util;
 
+import java.io.Serializable;
+
 /**
  * @Author 桂乙侨
  * @Date 2020/7/17 11:15
  * @Version 1.0
  * 返回给前端数据响应的统一封装格式
  */
-public class HoleResult {
+public class HoleResult implements Serializable {
 
     private int code;
 

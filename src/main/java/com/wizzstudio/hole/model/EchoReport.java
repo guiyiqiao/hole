@@ -1,12 +1,14 @@
 package com.wizzstudio.hole.model;
 
+import javax.persistence.Id;
+
 /**
  * @Author 桂乙侨
  * @Date 2020/8/29 15:24
  * @Version 1.0
  */
 public class EchoReport {
-
+    @Id
     private Integer id;
 
     private Integer echoId;

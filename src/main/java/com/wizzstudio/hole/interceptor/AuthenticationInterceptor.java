@@ -5,8 +5,9 @@ import com.wizzstudio.hole.annotation.PassToken;
 import com.wizzstudio.hole.annotation.UserLogin;
 import com.wizzstudio.hole.exception.AuthException;
 import com.wizzstudio.hole.mapper.UserMapper;
-import com.wizzstudio.hole.model.User;
-import com.wizzstudio.hole.model.constant.TokenConstant;
+import com.wizzstudio.hole.model.constant.TokenCacheKey;
+import com.wizzstudio.hole.util.HoleResult;
+import com.wizzstudio.hole.util.HoleUtils;
 import com.wizzstudio.hole.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.DataOutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
@@ -41,13 +45,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Resource
     private RedisTemplate redisTemplate;
-    @Resource
-    private UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("HandlerInterceptor  登陆认证拦截器 开始拦截");
-
         //不是映射到方法 直接通过
         if (!(handler instanceof HandlerMethod)) {
             return true;
@@ -63,35 +63,27 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         //检查有没有需要用户权限的注解
         if (method.isAnnotationPresent(UserLogin.class)) {
-            String token = request.getHeader("Authorization");
+            String token = HoleUtils.getToken(request);
             UserLogin userLogin = method.getAnnotation(UserLogin.class);
             if (userLogin.required()) {
                 // 执行认证
-                if (StringUtils.isEmpty(token)) {
-                    throw new AuthException("请先登录");
+                if (!StringUtils.isEmpty(token)) {
+                    // 获取 token 中的 userid
+                    Integer userId = tokenUtil.getUserId(token);
+                    String access_token = (String) redisTemplate.boundValueOps(TokenCacheKey.getUserTokenKey(userId)).get();
+                    if(token .equals(access_token)){
+                        return true;
+                    }
                 }
-                // 获取 token 中的 userid
-                Integer userId;
-                try {
-                    userId = tokenUtil.getUserId(token);
-                } catch (JWTDecodeException j) {
-                    throw new AuthException("登陆信息异常，请登陆后重试！");
-                }
-
-                //查询用户是否存在
-                User user = userMapper.queryUserById(userId);
-                if (user == null|| !tokenUtil.verify(token)) {
-                    throw new AuthException("用户信息错误，请登录!");
-                }
-
-                String access_token = (String) redisTemplate.boundValueOps(TokenConstant.USER_TOKEN.toString()+userId).get();
-
-                if(access_token== null){
-                    //access_token 过期
-                    return refreshToken(request,response);
-                }else{
-                    return token.equals(access_token);
-                }
+                //身份异常，提示授权
+                response.setStatus(401);
+                PrintWriter printWriter = response.getWriter();
+                HoleResult holeResult = HoleResult.HoleResultBuilder.HoleResult()
+                        .withCode(401)
+                        .withMessage("请登陆授权")
+                        .build();
+                printWriter.print(holeResult);
+                return false;//若如此返回异常没有return false 会报错
             }
         }
         return true;
@@ -99,7 +91,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("HandlerInterceptor 拦截完成");
     }
 
     @Override
@@ -121,7 +112,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         // 判断Redis中RefreshToken是否存在
         String refreshToken = (String) redisTemplate
-                .boundValueOps(TokenConstant.USER_REFRESH_TOKEN.toString()+userId)
+                .boundValueOps(TokenCacheKey.USER_REFRESH_TOKEN.toString()+userId)
                 .get();
 
         // Redis中RefreshToken还存在，获取RefreshToken的时间戳
@@ -133,7 +124,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             //TokenUtil.REFRESH_EXPIRE_TIME);
             // 刷新AccessToken，设置时间戳为当前最新时间戳
             token = tokenUtil.sign(userId, currentTimeMillis);
-            redisTemplate.boundValueOps(TokenConstant.USER_TOKEN.toString()+userId)
+            redisTemplate.boundValueOps(TokenCacheKey.USER_TOKEN.toString()+userId)
                     .set(token,tokenUtil.EXPIRE_TIME, TimeUnit.HOURS);
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
             httpServletResponse.setHeader("Authorization", token);

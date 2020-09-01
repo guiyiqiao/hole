@@ -56,6 +56,7 @@ public class EchoServiceImpl implements EchoService {
         //添加hug数量，并将userId存入最近hug用户
         redisTemplate.boundValueOps(CacheKey.getEchoThankKey(echoId))
                 .increment();
+        redisTemplate.boundSetOps(CacheKey.getEchoThankSetKey()).add(echoId);
         return HoleResult.success();
     }
 
@@ -75,5 +76,11 @@ public class EchoServiceImpl implements EchoService {
         List<Echo> echoes = echoMapper.select(echo);
         PageInfo<Echo> pageInfo = new PageInfo<>(echoes);
         return HoleResult.success(pageInfo);
+    }
+
+    @Override
+    public HoleResult openEcho(Integer echoId, Integer userId) {
+        int ret = echoMapper.openEcho(echoId,userId);
+        return ret > 0 ? HoleResult.success():HoleResult.failure("请稍后重试");
     }
 }

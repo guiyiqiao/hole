@@ -1,5 +1,7 @@
 package com.wizzstudio.hole.model;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -7,61 +9,21 @@ import java.io.Serializable;
  * @Date 2020/7/17 11:21
  * @Version 1.0
  */
+@Table(name = "user")
 public class User implements Serializable {
 
+    @Id
     private Integer id;
 
     //微信小程序唯一id
     private String openId;
 
-    private String nickName;
+    private String nickname;
 
     private Boolean valid;
 
 
-    public static final class UserBuilder {
-        private Integer id;
-        private String openId;
-        private String nickName;
-        private Boolean valid;
 
-        private UserBuilder() {
-        }
-
-        public static UserBuilder anUser() {
-            return new UserBuilder();
-        }
-
-        public UserBuilder withId(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public UserBuilder withOpenId(String openId) {
-            this.openId = openId;
-            return this;
-        }
-
-
-        public UserBuilder withNickName(String nickName) {
-            this.nickName = nickName;
-            return this;
-        }
-
-        public UserBuilder withValid(Boolean valid) {
-            this.valid = valid;
-            return this;
-        }
-
-        public User build() {
-            User user = new User();
-            user.id = this.id;
-            user.openId = this.openId;
-            user.nickName = this.nickName;
-            user.valid = this.valid;
-            return user;
-        }
-    }
 
     public User() {
     }
@@ -83,11 +45,11 @@ public class User implements Serializable {
     }
 
     public String getNickName() {
-        return nickName;
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickName) {
+        this.nickname = nickName;
     }
 
     public Boolean getValid() {
@@ -103,8 +65,52 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", openId='" + openId + '\'' +
-                ", nickName='" + nickName + '\'' +
+                ", nickName='" + nickname + '\'' +
                 ", valid=" + valid +
                 '}';
+    }
+
+    public static final class UserBuilder {
+        private Integer id;
+        //微信小程序唯一id
+        private String openId;
+        private String nickname;
+        private Boolean valid;
+
+        private UserBuilder() {
+        }
+
+        public static UserBuilder anUser() {
+            return new UserBuilder();
+        }
+
+        public UserBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder withOpenId(String openId) {
+            this.openId = openId;
+            return this;
+        }
+
+        public UserBuilder withNickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public UserBuilder withValid(Boolean valid) {
+            this.valid = valid;
+            return this;
+        }
+
+        public User build() {
+            User user = new User();
+            user.setId(id);
+            user.setOpenId(openId);
+            user.setNickname(nickname);
+            user.setValid(valid);
+            return user;
+        }
     }
 }

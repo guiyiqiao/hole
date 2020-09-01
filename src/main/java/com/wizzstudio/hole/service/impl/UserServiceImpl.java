@@ -2,12 +2,18 @@ package com.wizzstudio.hole.service.impl;
 
 import com.wizzstudio.hole.mapper.UserMapper;
 import com.wizzstudio.hole.model.User;
+import com.wizzstudio.hole.model.constant.TokenCacheKey;
 import com.wizzstudio.hole.service.UserService;
+import com.wizzstudio.hole.service.WxService;
 import com.wizzstudio.hole.util.HoleResult;
+import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author 桂乙侨
@@ -19,9 +25,26 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
+    @Autowired
+    private WxService wxService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
-    public User getUserByOpenId(String openId) {
-        return userMapper.queryUserByOpenId(openId);
+    public HoleResult login(HttpServletRequest request, HttpServletResponse response, String code, String nickName) {
+        String token = HoleUtils.getToken(request);
+        if(token != null){
+            //存在token，已经登陆过了，与缓存的token比对后放行
+            String o = (String) redisTemplate.boundValueOps(TokenCacheKey.getUserTokenKey(HoleUtils.getUserId(request)))
+                    .get();
+            System.out.println(token);
+            System.out.println(o);
+            if(token.equals(o))
+                return HoleResult.success();
+        }
+        return wxService.wxLogin(response,code,nickName);
+
     }
 
     /**

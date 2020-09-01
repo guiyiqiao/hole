@@ -2,13 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wizzstudio.hole.mapper.UserMapper" >
-
-    <select id="queryUserByOpenId" resultType="com.wizzstudio.hole.model.User">
-        SELECT id,open_id,address,nick_name,valid
-        FROM `user`
-        WHERE open_id = #{openId}
-        AND valid = 1
-    </select>
     <select id="queryUserById" resultType="com.wizzstudio.hole.model.User">
         SELECT id,open_id,address,nick_name,valid
         FROM `user`

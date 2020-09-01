@@ -1,5 +1,6 @@
 package com.wizzstudio.hole.model;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -8,7 +9,7 @@ import java.io.Serializable;
  * @Version 1.0
  */
 public class CommentReport implements Serializable {
-
+    @Id
     private Integer id;
 
     private Integer commentId;

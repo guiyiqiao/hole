@@ -22,7 +22,7 @@ public class BlogVo implements Serializable {
     private Boolean evaluable = false;
 
     //是否公开，默认私密
-    private Boolean state = false;
+    private Boolean overt = false;
 
     public String getTitle() {
         return title;
@@ -49,11 +49,11 @@ public class BlogVo implements Serializable {
     }
 
     public Boolean getState() {
-        return state;
+        return overt;
     }
 
     public void setState(Boolean state) {
-        this.state = state;
+        this.overt = state;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BlogVo implements Serializable {
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", evaluable=" + evaluable +
-                ", state=" + state +
+                ", state=" + overt +
                 '}';
     }
 }

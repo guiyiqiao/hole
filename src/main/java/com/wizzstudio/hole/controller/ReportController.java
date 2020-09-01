@@ -6,7 +6,7 @@ import com.wizzstudio.hole.model.CommentReport;
 import com.wizzstudio.hole.model.EchoReport;
 import com.wizzstudio.hole.service.ReportService;
 import com.wizzstudio.hole.util.HoleResult;
-import com.wizzstudio.hole.util.UserIdUtil;
+import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -33,13 +33,13 @@ public class ReportController {
      * @param reason 举报原因
      * @return
      */
-    @PostMapping("blog")
+    //@PostMapping("blog")
     @UserLogin
     public HoleResult reportBlog(@RequestParam("blogId") Integer blogId,
                              @RequestParam("reason") String reason,
                              HttpServletRequest request){
         BlogReport blogReport = BlogReport.BlogReportBuilder.aBlogReport()
-                .withUserId(UserIdUtil.getUserId(request))
+                .withUserId(HoleUtils.getUserId(request))
                 .withBlogId(blogId)
                 .withReason(reason)
                 .build();
@@ -54,7 +54,7 @@ public class ReportController {
      * @param request
      * @return
      */
-    @PostMapping("echo")
+    //@PostMapping("echo")
     @UserLogin
     public HoleResult reportEcho(@RequestParam("echoId") Integer echoId,
                              @RequestParam("reason") String reason,
@@ -65,7 +65,7 @@ public class ReportController {
                 .withEchoId(echoId)
                 .withReason(reason)
                 .withSolved(false)
-                .withUserId(UserIdUtil.getUserId(request))
+                .withUserId(HoleUtils.getUserId(request))
                 .build();
         return reportService.report(echoReport);
     }
@@ -76,7 +76,7 @@ public class ReportController {
      * @param request
      * @return
      */
-    @PostMapping("comment")
+    //@PostMapping("comment")
     @UserLogin
     public HoleResult reportComment(@RequestParam("commentId") Integer commentId,
                                     @RequestParam("reason") String reason,
@@ -87,7 +87,7 @@ public class ReportController {
                 .withSolved(false)
                 .withCommentId(commentId)
                 .withReason(reason)
-                .withUserId(UserIdUtil.getUserId(request))
+                .withUserId(HoleUtils.getUserId(request))
                 .build();
         return reportService.report(commentReport);
     }

@@ -4,7 +4,7 @@
 <mapper namespace="com.wizzstudio.hole.mapper.EchoMapper">
 
     <select id="timeline" resultType="com.wizzstudio.hole.model.Echo">
-        SELECT id,user_id,blog_id,content,thank，overt,publish_time,report,solved,valid
+        SELECT id,user_id,blog_id,content,thank,overt,publish_time,report,solved,valid
         FROM echo
         WHERE user_id =#{userId}
         OR blog_id IN(
@@ -15,4 +15,16 @@
 
     </select>
 
+    <update id="openEcho" >
+        UPDATE echo e
+        SET e.overt = 1
+        WHERE e.id = #{echoId}
+        AND e.blog_id =(
+            SELECT b.id,
+            FROM blog b
+            WHERE e.id = #{echoId}
+            AND b.id = e.blog_id
+            AND b.user_id = #{userId}
+        )
+    </update>
 </mapper>

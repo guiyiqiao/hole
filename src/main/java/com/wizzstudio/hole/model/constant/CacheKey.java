@@ -7,7 +7,7 @@ package com.wizzstudio.hole.model.constant;
  */
 public enum  CacheKey {
     BLOG_HUG_PREFIX("hole::blog::hug"),
-    COMMENT_THANK_PREFIX("hole::echo::thank");
+    ECHO_THANK_PREFIX("hole::echo::thank");
 
     private String value;
 
@@ -21,6 +21,14 @@ public enum  CacheKey {
 
 
     public static String getEchoThankKey(Integer echoId) {
-        return COMMENT_THANK_PREFIX.value + "::count::" + echoId;
+        return ECHO_THANK_PREFIX.value + "::count::" + echoId;
+    }
+
+    public static String getBlogHugSetKey(){
+        return BLOG_HUG_PREFIX+"::set";
+    }
+
+    public static String getEchoThankSetKey(){
+        return ECHO_THANK_PREFIX+"::set";
     }
 }

@@ -7,7 +7,7 @@ package com.wizzstudio.hole.model.constant;
  * @Date 2020/7/20 17:00
  * @Version 1.0
  */
-public enum TokenConstant {
+public enum TokenCacheKey {
 
     USER_TOKEN("hole::user::token::"),
     USER_REFRESH_TOKEN("hole::user::refreshToken::");
@@ -15,7 +15,15 @@ public enum TokenConstant {
 
     private String value;
 
-    TokenConstant(String s) {
+    TokenCacheKey(String s) {
         this.value = s;
+    }
+
+
+    public static String getUserTokenKey(Integer userId){
+        return USER_TOKEN.value+userId;
+    }
+    public static String getUserRefreshTokenKey(Integer userId){
+        return USER_REFRESH_TOKEN.value+userId;
     }
 }

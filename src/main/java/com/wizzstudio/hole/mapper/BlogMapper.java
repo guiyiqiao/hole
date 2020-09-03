@@ -11,5 +11,7 @@ public interface BlogMapper extends tk.mybatis.mapper.common.Mapper<Blog> {
 
     List<Blog> listBlogByUserId(Integer userId);
 
-    List<Blog> listBlogByComment(Integer userId);
+    int deleteBlog(Integer blogId,Integer userId);
+
+    List<Blog> listReplyBlog(Integer userId);
 }

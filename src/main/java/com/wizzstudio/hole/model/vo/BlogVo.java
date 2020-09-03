@@ -48,11 +48,11 @@ public class BlogVo implements Serializable {
         this.evaluable = evaluable;
     }
 
-    public Boolean getState() {
+    public Boolean getOvert() {
         return overt;
     }
 
-    public void setState(Boolean state) {
+    public void setOvert(Boolean state) {
         this.overt = state;
     }
 
@@ -62,7 +62,7 @@ public class BlogVo implements Serializable {
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", evaluable=" + evaluable +
-                ", state=" + overt +
+                ", overt=" + overt +
                 '}';
     }
 }

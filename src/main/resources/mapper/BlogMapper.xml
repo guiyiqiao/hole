@@ -7,16 +7,41 @@
         SELECT id,user_id,title,content,hug,publish_time,evaluable
         ,overt,valid
         FROM blog
-        WHERE user_id = #{userId}
+        WHERE valid = 1
+        AND user_id = #{userId}
     </select>
     <select id="listBlogByComment" resultType="com.wizzstudio.hole.model.Blog">
         SELECT id,user_id,title,content,hug,publish_time,evaluable
         ,overt,valid
         FROM blog
-        WHERE id in (
+        WHERE valid = 1
+        AND id in (
             SELECT blog_id
             FROM comment
             WHERE user_id = #{userId}
         )
+    </select>
+    <update id="deleteBlog">
+        UPDATE blog
+        SET valid = 0
+        WHERE id = #{blogId}
+        AND user_id =#{userId}
+    </update>
+    <select id="listReplyBlog" resultType="com.wizzstudio.hole.model.Blog">
+        SELECT id,user_id,title,content,hug,publish_time,evaluable,overt,valid
+        FROM blog
+        WHERE valid = 1
+        AND id in(
+            SELECT DISTINCT blog_id
+            FROM echo
+            WHERE user_id = #{userId}
+            AND valid = 1
+            UNION
+            SELECT DISTINCT blog_id
+            FROM comment
+            WHERE user_id = #{userId}
+            AND valid = 1
+        )
+
     </select>
 </mapper>

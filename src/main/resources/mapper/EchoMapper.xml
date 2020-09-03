@@ -14,16 +14,27 @@
         )
 
     </select>
-
     <update id="openEcho" >
+
         UPDATE echo e
         SET e.overt = 1
         WHERE e.id = #{echoId}
-        AND e.blog_id =(
-            SELECT b.id,
+        AND EXISTS (
+            SELECT b.id
             FROM blog b
-            WHERE e.id = #{echoId}
-            AND b.id = e.blog_id
+            WHERE b.id = e.blog_id
+            AND b.user_id = #{userId}
+        )
+    </update>
+
+    <update id="deleteEcho" >
+        UPDATE echo e
+        SET e.valid = 0
+        WHERE e.blog_id = #{blogId}
+        AND EXISTS (
+            SELECT b.id
+            FROM blog b
+            WHERE b.id = #{blogId}
             AND b.user_id = #{userId}
         )
     </update>

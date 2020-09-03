@@ -3,6 +3,7 @@ package com.wizzstudio.hole.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wizzstudio.hole.mapper.EchoMapper;
+import com.wizzstudio.hole.model.Blog;
 import com.wizzstudio.hole.model.Comment;
 import com.wizzstudio.hole.model.Echo;
 import com.wizzstudio.hole.model.constant.CacheKey;
@@ -11,6 +12,8 @@ import com.wizzstudio.hole.util.HoleResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -78,9 +81,48 @@ public class EchoServiceImpl implements EchoService {
         return HoleResult.success(pageInfo);
     }
 
+    /**
+     * 心事拥有者可选泽公开回声
+     * @param echoId
+     * @param userId
+     * @return
+     */
     @Override
     public HoleResult openEcho(Integer echoId, Integer userId) {
         int ret = echoMapper.openEcho(echoId,userId);
         return ret > 0 ? HoleResult.success():HoleResult.failure("请稍后重试");
+    }
+
+    /**
+     * 删除单条回声
+     * @param echoId
+     * @param userId
+     * @return
+     */
+    @Override
+    public HoleResult deleteEcho(Integer echoId, Integer userId) {
+        Example example = new Example(Echo.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",echoId);
+        criteria.andEqualTo("user_id",userId);
+        Echo echo = new Echo();
+        echo.setValid(false);
+        int ret = echoMapper.updateByExampleSelective(echo,example);
+        return ret > 0 ? HoleResult.success():HoleResult.failure();
+    }
+
+    @Override
+    public HoleResult listOvertEcho(int pageNum, int pageSize) {
+            PageHelper.startPage(pageNum,pageSize);
+
+            Condition condition = new Condition(Echo.class);
+            //待处理
+            condition.orderBy("thank").desc().orderBy("publishTime").desc();
+            Example.Criteria criteria = condition.createCriteria();
+            criteria.andEqualTo("overt",true);
+            criteria.andEqualTo("valid",true);
+            List<Echo> list = echoMapper.selectByExample(condition);
+            return HoleResult.success(list);
+
     }
 }

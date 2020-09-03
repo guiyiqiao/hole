@@ -26,7 +26,9 @@ public interface BlogService {
 
     List<Blog> listBlogByUserId(Integer userId);
 
-    List<Blog> getBlogByUserComment(Integer userId);
+    HoleResult deleteBlog(Integer blogId,Integer userId);
 
-    HoleResult deleteBlog(Blog blog);
+    HoleResult listOvertBlog(int pageNum,int pageSize);
+
+    HoleResult listReplyBlog(Integer userId, int pageNum, int pageSize);
 }

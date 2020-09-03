@@ -4,14 +4,21 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wizzstudio.hole.mapper.BlogMapper;
 import com.wizzstudio.hole.mapper.BlogReportMapper;
+import com.wizzstudio.hole.mapper.EchoMapper;
 import com.wizzstudio.hole.model.Blog;
 import com.wizzstudio.hole.model.BlogReport;
+import com.wizzstudio.hole.model.Echo;
 import com.wizzstudio.hole.model.constant.CacheKey;
 import com.wizzstudio.hole.service.BlogService;
+import com.wizzstudio.hole.service.EchoService;
 import com.wizzstudio.hole.util.HoleResult;
+import io.swagger.models.auth.In;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -31,7 +38,8 @@ public class BlogServiceImpl implements BlogService {
     @Resource
     private RedisTemplate redisTemplate;
 
-
+    @Resource
+    private EchoMapper echoMapper;
     /**
      * 需求2 查询心事详情
      * @param blogId
@@ -113,15 +121,36 @@ public class BlogServiceImpl implements BlogService {
     }
 
     /**
-     * 删除心事 以及 回声，待完成
-     * @param blog
+     * 需求四 查询我回应的心事
+     * @param userId
+     * @param pageNum
+     * @param pageSize
      * @return
      */
     @Override
-    public HoleResult deleteBlog(Blog blog) {
+    public HoleResult listReplyBlog(Integer userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+
+        List<Blog> select = blogMapper.listReplyBlog(userId);
+        PageInfo<Blog> pageInfo = new PageInfo<>(select);
+        return HoleResult.success(pageInfo);
+    }
+
+    /**
+     * 删除心事 和对应的回声
+     * @param blogId
+     * @return
+     */
+    @Override
+    @Transactional
+    public HoleResult deleteBlog(Integer blogId,Integer userId) {
+        echoMapper.deleteEcho(blogId,userId);
+        Blog blog = new Blog();
         blog.setValid(false);
-        int ret = blogMapper.updateByPrimaryKeySelective(blog);
-        return null;
+        blog.setId(blogId);
+        int ret = blogMapper.deleteBlog(blogId,userId);
+
+        return ret > 0? HoleResult.success():HoleResult.failure();
     }
 
     @Override
@@ -130,7 +159,15 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Blog> getBlogByUserComment(Integer userId) {
-        return blogMapper.listBlogByComment(userId);
+    public HoleResult listOvertBlog(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        Condition condition = new Condition(Blog.class);
+        //保留，待处理
+        condition.orderBy("hug").desc().orderBy("publishTime").desc();
+        Example.Criteria criteria = condition.createCriteria();
+        criteria.andEqualTo("overt",true);
+        criteria.andEqualTo("valid",true);
+        List<Blog> list = blogMapper.selectByExample(condition);
+        return HoleResult.success(list);
     }
 }

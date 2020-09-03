@@ -1,5 +1,8 @@
 package com.wizzstudio.hole.util;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
@@ -8,12 +11,16 @@ import java.io.Serializable;
  * @Version 1.0
  * 返回给前端数据响应的统一封装格式
  */
+@ApiModel(description = "同一返回结果集格式")
 public class HoleResult implements Serializable {
 
+    @ApiModelProperty(value = "返回码200为成功，其他为失败")
     private int code;
 
+    @ApiModelProperty(value = "返回的提示信息")
     private String message;
 
+    @ApiModelProperty(value = "可能返回的数据存放处")
     private Object data;
 
     public static HoleResult success(){

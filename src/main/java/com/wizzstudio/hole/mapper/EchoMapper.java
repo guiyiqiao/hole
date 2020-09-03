@@ -16,4 +16,6 @@ public interface EchoMapper extends Mapper<Echo> {
     List<Echo> timeline(Integer userId);
 
     int openEcho(Integer echoId,Integer userId);
+
+    int deleteEcho(Integer blogId,Integer userId);
 }

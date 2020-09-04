@@ -1,5 +1,6 @@
 package com.wizzstudio.hole.service;
 
+import com.github.pagehelper.PageInfo;
 import com.wizzstudio.hole.model.Blog;
 import com.wizzstudio.hole.model.BlogReport;
 import com.wizzstudio.hole.util.HoleResult;
@@ -14,17 +15,15 @@ import java.util.List;
  */
 public interface BlogService {
 
-    HoleResult getBlogById(Integer blogId);
-
-    HoleResult listBlog(int pageNum,int pageSize);
+    Blog getBlogById(Integer blogId);
 
     HoleResult addMatter(Blog blog);
 
     HoleResult addHug(Integer blogId);
 
-    HoleResult listMyBlog(Integer userId,int pageNum,int pageSize);
+    int getHug(Integer blogId);
 
-    List<Blog> listBlogByUserId(Integer userId);
+    HoleResult listMyBlog(Integer userId,int pageNum,int pageSize);
 
     HoleResult deleteBlog(Integer blogId,Integer userId);
 

@@ -24,28 +24,10 @@
 
 ![数据库模型图](.\model.png)
 
-## 注：字段的修改
-blog :  
-release_time -> publish_time  
-state -> overt公开的 默认为false  
-
-
-blog_report举报表
-content -> reason 举报原因
-
-comment回声表：
-release_time -> publish_time  
-state -> overt公开的 默认为0 false 私密
-tip_off -> report举报
-
-
-comment_report回声举报表
-content -> reason
-
 ## 待处理的小问题
 登陆授权的异常提示字段统一为 ：网络异常，请稍后再试
 举报出 原因为空 异常：请选择/输入举报原因
 评论区对心事的评论 与 传递回声 寄信 不一样
 
 ## 前台调试的问题
-1.新用户登陆响应太慢 13s
+关于时光轴方法的返回值文档不明确

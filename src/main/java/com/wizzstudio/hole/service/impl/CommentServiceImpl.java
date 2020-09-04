@@ -25,7 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     /**
-     * 需求三、添加回声
+     * 需求三、添加评论
      * @param comment
      * @return
      */

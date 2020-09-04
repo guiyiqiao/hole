@@ -12,13 +12,13 @@ public interface EchoService {
 
     HoleResult addEcho(Echo echo);
 
-    HoleResult thank(Integer commentId);
+    HoleResult thank(Integer echoId);
+
+    int getThank(Integer echoId);
 
     HoleResult openEcho(Integer echoId,Integer userId);
 
     HoleResult deleteEcho(Integer echoId,Integer userId);
-
-    HoleResult listByBlogId(Integer blogId,int pageNum,int pageSize);
 
     HoleResult listOvertEcho(int pageNum,int pageSize);
 }

@@ -9,7 +9,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:26
  * @Version 1.0
  */
-public class Echo implements Serializable ,TimelineComparable{
+public class Echo implements Serializable{
     @Id
     private Integer id;
 
@@ -130,10 +130,7 @@ public class Echo implements Serializable ,TimelineComparable{
         this.valid = valid;
     }
 
-    @Override
-    public Date getDate() {
-        return this.getPublishTime();
-    }
+
 
 
     public static final class EchoBuilder {

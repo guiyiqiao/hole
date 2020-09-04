@@ -46,21 +46,15 @@ public class EchoServiceImpl implements EchoService {
      */
     @Override
     public HoleResult thank(Integer echoId){
-        Echo echo = echoMapper.selectByPrimaryKey(echoId);
-        if(echo == null)
-            return HoleResult.failure("回声不存在！");
-
-        Boolean hasKey = redisTemplate.hasKey(CacheKey.getEchoThankKey(echoId));
-        if(!hasKey){
-            //如果没有用户列表hash键，则新建一个,过期时间默认为30天
-            redisTemplate.boundValueOps(CacheKey.getEchoThankKey(echoId))
-                    .set(0,2,TimeUnit.DAYS);
-        }
-        //添加hug数量，并将userId存入最近hug用户
-        redisTemplate.boundValueOps(CacheKey.getEchoThankKey(echoId))
-                .increment();
-        redisTemplate.boundSetOps(CacheKey.getEchoThankSetKey()).add(echoId);
+        redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).increment(echoId,1);
         return HoleResult.success();
+    }
+
+    @Override
+    public int getThank(Integer echoId) {
+        final Object o = redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).get(echoId);
+
+        return o == null ? 0:(Integer) o;
     }
 
     /**
@@ -68,7 +62,7 @@ public class EchoServiceImpl implements EchoService {
      * @param blogId
      * @return
      */
-    @Override
+/*    @Override
     public HoleResult listByBlogId(Integer blogId,int pageNum,int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         Echo echo = Echo.EchoBuilder.anEcho()
@@ -79,7 +73,7 @@ public class EchoServiceImpl implements EchoService {
         List<Echo> echoes = echoMapper.select(echo);
         PageInfo<Echo> pageInfo = new PageInfo<>(echoes);
         return HoleResult.success(pageInfo);
-    }
+    }*/
 
     /**
      * 心事拥有者可选泽公开回声

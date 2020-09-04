@@ -8,6 +8,9 @@ import com.wizzstudio.hole.service.WxService;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.HoleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +56,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
+    //@CacheEvict(cacheNames = "users",key = "#user.id")
     public HoleResult updateNickname(User user) {
         int ret = userMapper.updateByPrimaryKeySelective(user);
         return ret > 0? HoleResult.success():HoleResult.failure();
@@ -64,7 +68,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public HoleResult getUserInfo(Integer userId) {
-        return HoleResult.success(userMapper.selectByPrimaryKey(userId));
+    //@Cacheable(cacheNames = "users",key = "#userId")
+    public User getUserInfo(Integer userId) {
+        return userMapper.selectByPrimaryKey(userId);
     }
 }

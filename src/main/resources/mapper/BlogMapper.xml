@@ -2,14 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wizzstudio.hole.mapper.BlogMapper">
-
-    <select id="listBlogByUserId" resultType="com.wizzstudio.hole.model.Blog">
-        SELECT id,user_id,title,content,hug,publish_time,evaluable
-        ,overt,valid
-        FROM blog
-        WHERE valid = 1
-        AND user_id = #{userId}
-    </select>
     <select id="listBlogByComment" resultType="com.wizzstudio.hole.model.Blog">
         SELECT id,user_id,title,content,hug,publish_time,evaluable
         ,overt,valid
@@ -44,4 +36,15 @@
         )
 
     </select>
+
+    <update id="updateBatch" parameterType="java.util.Map" >
+
+        <foreach collection="map" item="value" index="key"
+                 separator=";" >
+            update blog
+            set  hug = #{value}
+
+            where id = #{key}
+        </foreach>
+    </update>
 </mapper>

@@ -34,7 +34,8 @@ public class UserController {
     @GetMapping
     @UserLogin
     public HoleResult getUserInfo(HttpServletRequest request){
-        return  userService.getUserInfo(HoleUtils.getUserId(request));
+        final User userInfo = userService.getUserInfo(HoleUtils.getUserId(request));
+        return userInfo != null?HoleResult.success(userInfo):HoleResult.failure();
     }
 
     /**

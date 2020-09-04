@@ -38,4 +38,13 @@
             AND b.user_id = #{userId}
         )
     </update>
+    <update id="updateBatch" parameterType="java.util.Map" >
+
+        <foreach collection="map" item="value" index="key"
+                 separator=";" >
+            update echo
+            set  thank = #{value}
+            where id = #{key}
+        </foreach>
+    </update>
 </mapper>

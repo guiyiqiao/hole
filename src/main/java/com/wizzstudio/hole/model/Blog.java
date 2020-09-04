@@ -9,7 +9,7 @@ import java.util.Date;
  * @Date 2020/7/17 11:23
  * @Version 1.0
  */
-public class Blog implements Serializable ,TimelineComparable{
+public class Blog implements Serializable {
     @Id
     private Integer id;
 
@@ -120,10 +120,6 @@ public class Blog implements Serializable ,TimelineComparable{
         this.valid = valid;
     }
 
-    @Override
-    public Date getDate() {
-        return this.publishTime;
-    }
 
     public static final class BlogBuilder {
         private Integer id;

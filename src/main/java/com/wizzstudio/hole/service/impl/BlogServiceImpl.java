@@ -2,19 +2,12 @@ package com.wizzstudio.hole.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.wizzstudio.hole.annotation.RedisCache;
 import com.wizzstudio.hole.mapper.BlogMapper;
-import com.wizzstudio.hole.mapper.BlogReportMapper;
 import com.wizzstudio.hole.mapper.EchoMapper;
 import com.wizzstudio.hole.model.Blog;
-import com.wizzstudio.hole.model.BlogReport;
-import com.wizzstudio.hole.model.Echo;
 import com.wizzstudio.hole.model.constant.CacheKey;
 import com.wizzstudio.hole.service.BlogService;
-import com.wizzstudio.hole.service.EchoService;
 import com.wizzstudio.hole.util.HoleResult;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +16,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +29,11 @@ import java.util.concurrent.TimeUnit;
 public class BlogServiceImpl implements BlogService {
 
     private ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    @Resource(name = "hugMap")
+    private ConcurrentHashMap<Integer,Integer> hugMap ;
+
+
 
     @Resource
     private BlogMapper blogMapper;
@@ -83,15 +82,17 @@ public class BlogServiceImpl implements BlogService {
      */
     @Override
     public HoleResult addHug(Integer blogId) {
-        redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).increment(blogId,1);
+        hugMap.put(blogId,hugMap.getOrDefault(blogId,0)+1);
+        //redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).increment(blogId,1);
         return HoleResult.success();
     }
 
     @Override
     public int getHug(Integer blogId) {
-        final Object o = redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).get(blogId);
+        final Integer integer = hugMap.getOrDefault(blogId, 0);
+        //final Object o = redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).get(blogId);
 
-        return o == null?0:(Integer) o;
+        return integer;
     }
 
     /**

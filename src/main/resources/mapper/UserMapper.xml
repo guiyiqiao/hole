@@ -8,8 +8,4 @@
         WHERE id = #{id}
         AND valid = 1
     </select>
-    <insert id="insertUser" parameterType="com.wizzstudio.hole.model.User">
-        INSERT INTO `user`(open_id,address,nick_name)
-        VALUES(#{openId},#{address},#{nickName})
-    </insert>
 </mapper>

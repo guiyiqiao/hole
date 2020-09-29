@@ -41,8 +41,6 @@ public class UserServiceImpl implements UserService {
             //存在token，已经登陆过了，与缓存的token比对后放行
             String o = (String) redisTemplate.boundValueOps(TokenCacheKey.getUserTokenKey(HoleUtils.getUserId(request)))
                     .get();
-            System.out.println(token);
-            System.out.println(o);
             if(token.equals(o))
                 return HoleResult.success();
         }

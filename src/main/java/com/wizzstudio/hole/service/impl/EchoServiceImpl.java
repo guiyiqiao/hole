@@ -17,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class EchoServiceImpl implements EchoService {
 
+    @Resource(name = "thankMap")
+    private ConcurrentHashMap<Integer,Integer> thankMap ;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -46,15 +49,16 @@ public class EchoServiceImpl implements EchoService {
      */
     @Override
     public HoleResult thank(Integer echoId){
-        redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).increment(echoId,1);
+        thankMap.put(echoId,thankMap.getOrDefault(echoId,0)+1);
+        //redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).increment(echoId,1);
         return HoleResult.success();
     }
 
     @Override
     public int getThank(Integer echoId) {
-        final Object o = redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).get(echoId);
+        //final Object o = redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).get(echoId);
+        return thankMap.getOrDefault(echoId,0);
 
-        return o == null ? 0:(Integer) o;
     }
 
     /**

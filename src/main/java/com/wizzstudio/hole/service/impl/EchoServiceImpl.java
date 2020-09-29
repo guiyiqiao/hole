@@ -17,6 +17,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +28,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class EchoServiceImpl implements EchoService {
 
+    @Resource(name = "thankMap")
+    private ConcurrentHashMap<Integer,Integer> thankMap ;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -46,21 +49,16 @@ public class EchoServiceImpl implements EchoService {
      */
     @Override
     public HoleResult thank(Integer echoId){
-        Echo echo = echoMapper.selectByPrimaryKey(echoId);
-        if(echo == null)
-            return HoleResult.failure("回声不存在！");
-
-        Boolean hasKey = redisTemplate.hasKey(CacheKey.getEchoThankKey(echoId));
-        if(!hasKey){
-            //如果没有用户列表hash键，则新建一个,过期时间默认为30天
-            redisTemplate.boundValueOps(CacheKey.getEchoThankKey(echoId))
-                    .set(0,2,TimeUnit.DAYS);
-        }
-        //添加hug数量，并将userId存入最近hug用户
-        redisTemplate.boundValueOps(CacheKey.getEchoThankKey(echoId))
-                .increment();
-        redisTemplate.boundSetOps(CacheKey.getEchoThankSetKey()).add(echoId);
+        thankMap.put(echoId,thankMap.getOrDefault(echoId,0)+1);
+        //redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).increment(echoId,1);
         return HoleResult.success();
+    }
+
+    @Override
+    public int getThank(Integer echoId) {
+        //final Object o = redisTemplate.boundHashOps(CacheKey.ECHO_THANK_PREFIX).get(echoId);
+        return thankMap.getOrDefault(echoId,0);
+
     }
 
     /**
@@ -68,7 +66,7 @@ public class EchoServiceImpl implements EchoService {
      * @param blogId
      * @return
      */
-    @Override
+/*    @Override
     public HoleResult listByBlogId(Integer blogId,int pageNum,int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         Echo echo = Echo.EchoBuilder.anEcho()
@@ -79,7 +77,7 @@ public class EchoServiceImpl implements EchoService {
         List<Echo> echoes = echoMapper.select(echo);
         PageInfo<Echo> pageInfo = new PageInfo<>(echoes);
         return HoleResult.success(pageInfo);
-    }
+    }*/
 
     /**
      * 心事拥有者可选泽公开回声

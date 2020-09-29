@@ -66,12 +66,15 @@ public class WxServiceImpl implements WxService {
             user = User.UserBuilder.anUser()
                 .withOpenId(openid)
                 .withNickname(StringUtils.isEmpty(nickName)?openid:nickName)
+                .withValid(true)
                 .build();
-            int t = userMapper.insertUser(user);
+            int t = userMapper.insert(user);
             if(t <= 0)
                 return HoleResult.failure("用户登陆认证失败，请重新登陆！");
             user = userMapper.selectOne(queryUser);
         }
+
+
 
         //登陆认证成功，添加用户token
         String token = (String) redisTemplate.boundValueOps(TokenCacheKey.getUserTokenKey(user.getId())).get();

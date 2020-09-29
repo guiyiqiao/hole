@@ -3,17 +3,11 @@ package com.wizzstudio.hole.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wizzstudio.hole.mapper.BlogMapper;
-import com.wizzstudio.hole.mapper.BlogReportMapper;
 import com.wizzstudio.hole.mapper.EchoMapper;
 import com.wizzstudio.hole.model.Blog;
-import com.wizzstudio.hole.model.BlogReport;
-import com.wizzstudio.hole.model.Echo;
 import com.wizzstudio.hole.model.constant.CacheKey;
 import com.wizzstudio.hole.service.BlogService;
-import com.wizzstudio.hole.service.EchoService;
 import com.wizzstudio.hole.util.HoleResult;
-import io.swagger.models.auth.In;
-import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +16,8 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +27,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class BlogServiceImpl implements BlogService {
+
+    private ThreadLocalRandom random = ThreadLocalRandom.current();
+
+    @Resource(name = "hugMap")
+    private ConcurrentHashMap<Integer,Integer> hugMap ;
+
+
 
     @Resource
     private BlogMapper blogMapper;
@@ -46,25 +49,15 @@ public class BlogServiceImpl implements BlogService {
      * @return
      */
     @Override
-    public HoleResult getBlogById(Integer blogId) {
-
-        return HoleResult.success(blogMapper.selectByPrimaryKey(blogId));
-    }
-
-
-
-
-    /**
-     * 需求二、查询心事列表
-     * @return
-     */
-    @Override
-    public HoleResult listBlog(int pageNum,int pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
-        //设置分页数据，该方法之后的第一个select方法会进行分页
-        List<Blog> listBlog = blogMapper.selectAll();
-        PageInfo<Blog> pageInfo = new PageInfo<>(listBlog);
-        return HoleResult.success(pageInfo);
+    public Blog getBlogById(Integer blogId) {
+        Object o = redisTemplate.boundValueOps(CacheKey.getBlogKey(blogId)).get();
+        if(o == null){
+            Blog blog = blogMapper.selectByPrimaryKey(blogId);
+            if(blog != null)
+                redisTemplate.boundValueOps(CacheKey.getBlogKey(blogId)).set(blog,7200+(random.nextInt()%60),TimeUnit.SECONDS);
+            return null;
+        }
+        return (Blog) o;
     }
 
     /**
@@ -89,17 +82,18 @@ public class BlogServiceImpl implements BlogService {
      */
     @Override
     public HoleResult addHug(Integer blogId) {
-        Blog blog = blogMapper.selectByPrimaryKey(blogId);
-        if(blog == null)
-            return HoleResult.failure("心事不存在！");
-        BoundValueOperations boundValueOperations = redisTemplate.boundValueOps(CacheKey.getBlogHugKey(blogId));
-        boundValueOperations
-                .setIfAbsent(0,2,TimeUnit.DAYS);
-        boundValueOperations.increment();
-        redisTemplate.boundSetOps(CacheKey.getBlogHugSetKey()).add(blogId);
+        hugMap.put(blogId,hugMap.getOrDefault(blogId,0)+1);
+        //redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).increment(blogId,1);
         return HoleResult.success();
     }
 
+    @Override
+    public int getHug(Integer blogId) {
+        final Integer integer = hugMap.getOrDefault(blogId, 0);
+        //final Object o = redisTemplate.boundHashOps(CacheKey.BLOG_HUG_PREFIX).get(blogId);
+
+        return integer;
+    }
 
     /**
      * 需求四 查询我的心事
@@ -154,15 +148,9 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<Blog> listBlogByUserId(Integer userId) {
-        return blogMapper.listBlogByUserId(userId);
-    }
-
-    @Override
     public HoleResult listOvertBlog(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         Condition condition = new Condition(Blog.class);
-        //保留，待处理
         condition.orderBy("hug").desc().orderBy("publishTime").desc();
         Example.Criteria criteria = condition.createCriteria();
         criteria.andEqualTo("overt",true);

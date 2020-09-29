@@ -36,7 +36,8 @@ public class BlogController {
     @PassToken
     @ApiOperation(value = "无需登陆；通过心事id查询心事详情信息")
     public HoleResult getBlogById(@RequestParam("blogId") Integer blogId){
-        return blogService.getBlogById(blogId);
+        Blog blog = blogService.getBlogById(blogId);
+        return blog == null?HoleResult.failure():HoleResult.success(blog);
     }
 
 
@@ -70,13 +71,19 @@ public class BlogController {
      * @return
      */
 
-    @ApiOperation(value = "无需登陆；心事拥抱接口")
+    @ApiOperation(value = "无需登陆；添加心事拥抱接口")
     @PassToken
     @PostMapping("hug/{blogId}")
     public HoleResult addHug(@PathVariable("blogId") Integer blogId){
         return blogService.addHug(blogId);
     }
 
+    @ApiOperation(value = "无需登陆；查询心事拥抱接口（因为这一块使用了缓存，数据库的数量偏少）")
+    @PassToken
+    @GetMapping("hug/{blogId}")
+    public HoleResult getHug(@PathVariable("blogId") Integer blogId){
+        return HoleResult.success(blogService.getHug(blogId));
+    }
 
 
     /**

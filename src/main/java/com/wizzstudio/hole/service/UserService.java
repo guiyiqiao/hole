@@ -16,7 +16,7 @@ public interface UserService {
 
     HoleResult updateNickname(User user);
 
-    HoleResult getUserInfo(Integer userId);
+    User getUserInfo(Integer userId);
 
     HoleResult login(HttpServletRequest request, HttpServletResponse response, String code, String nickName);
 }

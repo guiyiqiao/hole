@@ -1,10 +1,7 @@
 package com.wizzstudio.hole.interceptor;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.wizzstudio.hole.annotation.PassToken;
 import com.wizzstudio.hole.annotation.UserLogin;
-import com.wizzstudio.hole.exception.AuthException;
-import com.wizzstudio.hole.mapper.UserMapper;
 import com.wizzstudio.hole.model.constant.TokenCacheKey;
 import com.wizzstudio.hole.util.HoleResult;
 import com.wizzstudio.hole.util.HoleUtils;
@@ -20,12 +17,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataOutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +31,9 @@ import java.util.concurrent.TimeUnit;
  * @Version 1.0
  */
 @Component
-public class AuthenticationInterceptor implements HandlerInterceptor {
+public class TokenInterceptor implements HandlerInterceptor {
 
-    private static Logger log = LoggerFactory.getLogger(AuthenticationInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(TokenInterceptor.class);
 
     @Autowired
     private TokenUtil tokenUtil;

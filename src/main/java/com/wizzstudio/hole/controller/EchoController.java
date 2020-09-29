@@ -38,7 +38,9 @@ public class EchoController {
     @ApiOperation(value = "需要登陆；对心事 传递回声 接口")
     @UserLogin
     @PostMapping
-    public HoleResult addEcho(@Valid EchoVo echoVo, BindingResult bindingResult, HttpServletRequest request){
+    public HoleResult addEcho(@Valid EchoVo echoVo,
+                              BindingResult bindingResult,
+                              HttpServletRequest request){
         HoleResult holeResult = HoleUtils.valid(bindingResult);
         if(holeResult != null)
             return holeResult;
@@ -53,11 +55,18 @@ public class EchoController {
         return echoService.addEcho(echo);
     }
 
-    @PostMapping("thank")
+    @PostMapping("thank/{echoId}")
     @PassToken
     @ApiOperation(value = "不需要登陆；对回声进行感谢")
-    public HoleResult thank(@RequestParam("echoId") Integer echoId){
+    public HoleResult thank(@PathVariable("echoId") Integer echoId){
         return echoService.thank(echoId);
+    }
+
+    @GetMapping("thank/{echoId}")
+    @PassToken
+    @ApiOperation(value = "不需要登陆；对回声感谢数进行查询（缓存数据库弱一致性）")
+    public HoleResult getThank(@PathVariable("echoId") Integer echoId){
+        return HoleResult.success(echoService.getThank(echoId));
     }
 
     //设置echo可见
@@ -96,7 +105,5 @@ public class EchoController {
                                     @RequestParam("ageSize") int pageSize){
         return echoService.listOvertEcho(pageNum,pageSize);
     }
-
-
 
 }

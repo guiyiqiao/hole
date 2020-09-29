@@ -5,9 +5,9 @@ package com.wizzstudio.hole.exception;
  * @Date 2020/7/20 11:12
  * @Version 1.0
  */
-public class AuthException extends Exception{
+public class HoleException extends RuntimeException{
 
-    public AuthException(String message){
+    public HoleException(String message){
         super(message);
     }
 
